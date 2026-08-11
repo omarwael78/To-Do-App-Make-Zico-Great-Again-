@@ -171,6 +171,21 @@ export default function App() {
     );
   }, [streak, sounds, notify]);
 
+  // Celebrate beating the all-time best streak (level-up multiples are
+  // already celebrated above, so they are skipped here).
+  const prevBestStreak = useRef<number | null>(null);
+  useEffect(() => {
+    if (prevBestStreak.current === null) {
+      prevBestStreak.current = stats.bestStreak;
+      return;
+    }
+    if (streak > stats.bestStreak && streak % 5 !== 0) {
+      setReaction({ id: Date.now(), type: 'levelup' });
+      sounds.playPerfect();
+      notify(`🏆 New record — ${streak}-day streak!`, 'success');
+    }
+  }, [streak, stats.bestStreak, sounds, notify]);
+
   /* ---------- handlers with feedback ---------- */
   /** Completing a task earns 1 coin — Zico's shop currency. */
   const handleToggleTask = useCallback(
@@ -410,6 +425,7 @@ export default function App() {
               <MascotBanner
                 mood={mood}
                 streak={streak}
+                bestStreak={stats.bestStreak}
                 unfinishedStreak={unfinishedStreak}
                 total={counts.all}
                 completed={counts.completed}

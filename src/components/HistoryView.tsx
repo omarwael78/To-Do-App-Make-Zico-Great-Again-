@@ -12,6 +12,7 @@ interface HistoryViewProps {
     totalAllTime: number;
     avgRate: number;
     streak: number;
+    bestStreak: number;
   };
   onClearHistory: () => void;
 }
@@ -111,11 +112,17 @@ export default function HistoryView({ history, stats, onClearHistory }: HistoryV
   return (
     <div className="animate-view-fade space-y-4">
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
         <StatCard index={0} value={stats.daysTracked} label="Days" accent="text-violet-500" />
         <StatCard index={1} value={stats.doneAllTime} label="Done" accent="text-emerald-500" />
         <StatCard index={2} value={`${stats.avgRate}%`} label="Avg rate" accent="text-indigo-500" />
         <StatCard index={3} value={`🔥${stats.streak}`} label="Streak" accent="text-amber-500" />
+        <StatCard
+          index={4}
+          value={`🏆${Math.max(stats.bestStreak, stats.streak)}`}
+          label="Best"
+          accent="text-rose-500"
+        />
       </div>
 
       <MiniChart history={history} />

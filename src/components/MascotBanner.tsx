@@ -6,6 +6,7 @@ import type { Mood, Reaction } from '@/types/task';
 interface MascotBannerProps {
   mood: Mood;
   streak: number;
+  bestStreak: number;
   unfinishedStreak: number;
   total: number;
   completed: number;
@@ -76,6 +77,7 @@ const MOOD_INFO: Record<
 export default function MascotBanner({
   mood,
   streak,
+  bestStreak,
   unfinishedStreak,
   total,
   completed,
@@ -120,6 +122,9 @@ export default function MascotBanner({
     : streak === 0
       ? 'Finish a task to start your streak!'
       : `Level ${level} · ${5 - levelProgress} day${5 - levelProgress === 1 ? '' : 's'} to the next`;
+
+  const bestRecord = Math.max(bestStreak, streak);
+  const isRecord = streak > bestStreak && streak > 0;
 
   /** Items shown in the strip: all streak gear + owned shop items. */
   const stripItems: Gadget[] = [
@@ -248,8 +253,25 @@ export default function MascotBanner({
           <span className="flex gap-1" role="img" aria-label={caption}>
             {pips}
           </span>
-          <span className="truncate text-[10px] font-bold text-slate-400 dark:text-slate-500">
-            {caption}
+          <span className="flex min-w-0 items-center gap-1.5">
+            <span
+              title={
+                isRecord
+                  ? `New personal best: ${streak} days!`
+                  : `Best streak ever: ${bestRecord} days`
+              }
+              className={cn(
+                'animate-fade-in-scale shrink-0 rounded-full border px-1.5 py-0.5 text-[9px] font-extrabold',
+                isRecord
+                  ? 'border-amber-300 bg-amber-100 text-amber-700 dark:border-amber-500/40 dark:bg-amber-500/20 dark:text-amber-300'
+                  : 'border-slate-200 bg-white/70 text-slate-400 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-500'
+              )}
+            >
+              {isRecord ? `🏆 ${streak} — new best!` : `🏆 ${bestRecord}`}
+            </span>
+            <span className="truncate text-[10px] font-bold text-slate-400 dark:text-slate-500">
+              {caption}
+            </span>
           </span>
         </div>
 

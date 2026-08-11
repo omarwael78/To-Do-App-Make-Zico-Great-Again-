@@ -427,12 +427,32 @@ export function useTaskData() {
       allHistoryTasks.filter((t) => t.completed).length +
       tasks.filter((t) => t.completed).length;
     const totalAllTime = allHistoryTasks.length + tasks.length;
+
+    // Longest run of consecutive productive days in saved history
+    // (today is excluded so a live record can be detected).
+    const productive = new Set(
+      history.filter((d) => d.tasks.some((t) => t.completed)).map((d) => d.date)
+    );
+    const today = getDateString();
+    let bestStreak = 0;
+    let run = 0;
+    for (let i = 3650; i >= 0; i--) {
+      const day = daysBetween(today, i);
+      if (productive.has(day)) {
+        run += 1;
+        if (run > bestStreak) bestStreak = run;
+      } else {
+        run = 0;
+      }
+    }
+
     return {
       daysTracked: history.length,
       doneAllTime,
       totalAllTime,
       avgRate: totalAllTime ? Math.round((doneAllTime / totalAllTime) * 100) : 0,
       streak,
+      bestStreak,
     };
   }, [history, tasks, streak]);
 
