@@ -258,6 +258,14 @@
   transform-origin: center;
   animation: twinkle 2.4s ease-in-out infinite;
 }
+@keyframes mouthTremble {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translate(0.35px, 0.6px); }
+}
+.animate-mouth-tremble {
+  transform-box: fill-box;
+  animation: mouthTremble 0.28s linear infinite;
+}
 .animate-mascot-breathe { animation: mascotBreathe 3.2s ease-in-out infinite; }
 .animate-mascot-walk { animation: mascotWalk 0.9s ease-in-out infinite; }
 .animate-mascot-walk-fast { animation: mascotWalk 0.55s ease-in-out infinite; }

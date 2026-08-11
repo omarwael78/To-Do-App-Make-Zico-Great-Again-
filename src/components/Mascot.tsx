@@ -512,6 +512,22 @@ export default function Mascot({
           </g>
         )}
 
+        {/* Surprise "!" above the head on completion */}
+        {showWow && (
+          <text
+            x="82"
+            y="24"
+            fontSize="11"
+            fontWeight="black"
+            fill="#a78bfa"
+            stroke="#4c1d95"
+            strokeWidth="0.5"
+            className="animate-pop"
+          >
+            !
+          </text>
+        )}
+
         {/* Sleepy "z z z" (idle with nothing to do) */}
         {showIdle && idleFace === 'sleepy' && (
           <g aria-hidden="true">
@@ -530,11 +546,11 @@ export default function Mascot({
           </g>
         )}
 
-        {/* Blush (happy face) */}
-        {showHappy && (
+        {/* Blush (happy, or nearly done — grows rosier with excitement) */}
+        {(showHappy || excitement >= 2) && !faceSad && (
           <g aria-hidden="true">
-            <ellipse cx="25" cy="54" rx="5" ry="3" fill={p.blush} opacity="0.7" />
-            <ellipse cx="75" cy="54" rx="5" ry="3" fill={p.blush} opacity="0.7" />
+            <ellipse cx="25" cy="54" rx={5 + excitement * 0.5} ry={3 + excitement * 0.25} fill={p.blush} opacity={0.55 + excitement * 0.12} />
+            <ellipse cx="75" cy="54" rx={5 + excitement * 0.5} ry={3 + excitement * 0.25} fill={p.blush} opacity={0.55 + excitement * 0.12} />
           </g>
         )}
 
@@ -597,8 +613,10 @@ export default function Mascot({
             </>
           ) : showMeh ? (
             <>
-              <path d="M33 47 Q37 49 41 47" stroke="#312e81" strokeWidth="3" fill="none" strokeLinecap="round" />
-              <path d="M59 47 Q63 49 67 47" stroke="#312e81" strokeWidth="3" fill="none" strokeLinecap="round" />
+              <path d="M33 46.5 Q37 49 41 46.5" stroke="#312e81" strokeWidth="3.2" fill="none" strokeLinecap="round" />
+              <path d="M59 46.5 Q63 49 67 46.5" stroke="#312e81" strokeWidth="3.2" fill="none" strokeLinecap="round" />
+              <circle cx="34.4" cy="48.4" r="1.6" fill="#312e81" />
+              <circle cx="65.6" cy="48.4" r="1.6" fill="#312e81" />
             </>
           ) : showIdle ? (
             idleFace === 'sleepy' ? (
@@ -672,6 +690,28 @@ export default function Mascot({
           </g>
         )}
 
+        {/* Joyful brows (happy / laugh / wow / all done) */}
+        {(showHappy || showLaugh || showWow || showAllDone) && !faceSad && !worried && (
+          <g aria-hidden="true">
+            {showWow ? (
+              <>
+                <path d="M30 39.5 Q37 36 44 39.5" stroke="#312e81" strokeWidth="2.2" strokeLinecap="round" />
+                <path d="M56 39.5 Q63 36 70 39.5" stroke="#312e81" strokeWidth="2.2" strokeLinecap="round" />
+              </>
+            ) : showLaugh ? (
+              <>
+                <path d="M31 39.5 L43 36.5" stroke="#312e81" strokeWidth="2.4" strokeLinecap="round" />
+                <path d="M69 39.5 L57 36.5" stroke="#312e81" strokeWidth="2.4" strokeLinecap="round" />
+              </>
+            ) : (
+              <>
+                <path d="M31 39 Q37 36.5 43 39" stroke="#312e81" strokeWidth="2.2" strokeLinecap="round" />
+                <path d="M57 39 Q63 36.5 69 39" stroke="#312e81" strokeWidth="2.2" strokeLinecap="round" />
+              </>
+            )}
+          </g>
+        )}
+
         {/* Mouth */}
         {faceSad ? (
           <>
@@ -681,14 +721,18 @@ export default function Mascot({
         ) : showWow ? (
           <ellipse cx="50" cy="58" rx="3.4" ry="4.2" fill="#312e81" />
         ) : showLaugh ? (
-          <path d={`M${50 - smileSpan / 2} 56 Q50 ${68 + excitement} ${50 + smileSpan / 2} 56`} stroke="#312e81" strokeWidth="3.4" fill="none" strokeLinecap="round" />
+          <>
+            <path d="M42 56 Q50 72.5 58 56 Q50 63.5 42 56 Z" fill="#9f1239" />
+            <ellipse cx="50" cy="63.8" rx="3.2" ry="2.3" fill="#fb7185" stroke="#e11d48" strokeWidth="0.5" />
+            <path d={`M${50 - smileSpan / 2} 55.5 Q50 ${67 + excitement} ${50 + smileSpan / 2} 55.5`} stroke="#312e81" strokeWidth="3.4" fill="none" strokeLinecap="round" />
+          </>
         ) : showMeh ? (
           <path d="M43 59.5 Q50 61 57 59.5" stroke="#312e81" strokeWidth="3" fill="none" strokeLinecap="round" />
         ) : showIdle ? (
           idleFace === 'sleepy' ? (
             <ellipse cx="50" cy="59" rx="2.4" ry="2.6" fill="#312e81" />
           ) : idleFace === 'bored' ? (
-            <path d="M44 60 Q50 59 56 60" stroke="#312e81" strokeWidth="3" fill="none" strokeLinecap="round" />
+            <ellipse cx="50" cy="60" rx="2.6" ry="3.4" fill="#312e81" />
           ) : (
             <path d="M43 58 Q50 62 57 58" stroke="#312e81" strokeWidth="3.4" fill="none" strokeLinecap="round" />
           )
@@ -698,7 +742,7 @@ export default function Mascot({
             {showTongue && <ellipse cx="50" cy="63.5" rx="2.6" ry="3" fill="#fb7185" stroke="#e11d48" strokeWidth="0.6" />}
           </>
         ) : worried ? (
-          <path d="M44 61.5 Q50 64 56 61.5" stroke="#312e81" strokeWidth="3.2" fill="none" strokeLinecap="round" />
+          <path className="animate-mouth-tremble" d="M44 61.5 Q50 64 56 61.5" stroke="#312e81" strokeWidth="3.2" fill="none" strokeLinecap="round" />
         ) : (
           <path d="M43 58 Q50 62 57 58" stroke="#312e81" strokeWidth="3.4" fill="none" strokeLinecap="round" />
         )}
