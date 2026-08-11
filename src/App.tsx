@@ -17,6 +17,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { useToasts } from '@/hooks/useToasts';
 import { useWardrobe } from '@/hooks/useWardrobe';
 import { useSounds } from '@/hooks/useSounds';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { STREAK_GADGETS, gadgetById } from '@/data/wardrobe';
 import { getDateString } from '@/utils/date';
 import { FilterType, ViewType, Task, Mood, Reaction } from '@/types/task';
@@ -57,6 +58,20 @@ export default function App() {
   /** Floating "+N 🪙" animation id (bump to replay). */
   const [coinFx, setCoinFx] = useState<{ id: number; amount: number } | null>(null);
 
+  /* ---------- daily free chest ---------- */
+  const [chestDate, setChestDate] = useLocalStorage<string>('taskflow-chest-date', '');
+  const chestAvailable = chestDate !== getDateString();
+
+  const handleOpenChest = useCallback(() => {
+    if (chestDate === getDateString()) return;
+    const reward = 5 + Math.floor(Math.random() * 11); // 5-15 coins
+    wardrobe.addCoins(reward);
+    setCoinFx({ id: Date.now(), amount: reward });
+    setChestDate(getDateString());
+    sounds.playChest();
+    notify(`Daily chest opened! +${reward} 🪙`, 'success');
+  }, [chestDate, wardrobe.addCoins, setChestDate, sounds, notify]);
+
   /* ---------- derived ---------- */
   const counts = useMemo(
     () => ({
@@ -91,7 +106,13 @@ export default function App() {
     // falling behind today (3+ pending, barely started) adds a little worry
     const penalty = counts.active >= 3 && todayPct < 1 / 3 ? -1 : 0;
 
-    const score = Math.max(-3, Math.min(3, happyLevel - sadLevel + boost + penalty));
+    // No activity at all today — streak alone shouldn't make him ecstatic
+    const noActivity = counts.all === 0 && counts.completed === 0;
+
+    const score = Math.max(
+      -3,
+      Math.min(noActivity ? 2 : 3, happyLevel - sadLevel + boost + penalty)
+    );
 
     if (score >= 3) return 'ecstatic';
     if (score === 2) return 'very-happy';
@@ -398,6 +419,8 @@ export default function App() {
                 owned={wardrobe.owned}
                 equipped={wardrobe.equipped}
                 coinFx={coinFx}
+                chestAvailable={chestAvailable}
+                onOpenChest={handleOpenChest}
                 onToggleEquip={handleToggleEquip}
                 onOpenShop={() => setWardrobeOpen(true)}
               />

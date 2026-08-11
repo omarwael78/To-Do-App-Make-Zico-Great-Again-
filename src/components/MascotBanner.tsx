@@ -16,6 +16,9 @@ interface MascotBannerProps {
   equipped: string[];
   /** Non-null while a coin reward is animating (bump `id` to replay). */
   coinFx: { id: number; amount: number } | null;
+  /** True until today's free chest has been opened. */
+  chestAvailable: boolean;
+  onOpenChest: () => void;
   onToggleEquip: (id: string) => void;
   onOpenShop: () => void;
 }
@@ -82,6 +85,8 @@ export default function MascotBanner({
   owned,
   equipped,
   coinFx,
+  chestAvailable,
+  onOpenChest,
   onToggleEquip,
   onOpenShop,
 }: MascotBannerProps) {
@@ -161,6 +166,23 @@ export default function MascotBanner({
             >
               ⏳ {active} left
             </span>
+            <button
+              onClick={onOpenChest}
+              disabled={!chestAvailable}
+              title={
+                chestAvailable
+                  ? 'Open your free daily chest!'
+                  : 'Daily chest opened — come back tomorrow'
+              }
+              className={cn(
+                'rounded-full px-2 py-0.5 text-[10px] font-extrabold transition-transform',
+                chestAvailable
+                  ? 'animate-celebrate border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 text-amber-600 hover:scale-105 dark:border-amber-500/30 dark:from-amber-500/10 dark:to-orange-500/10 dark:text-amber-400'
+                  : 'bg-slate-100 text-slate-400 dark:bg-slate-700/60 dark:text-slate-500'
+              )}
+            >
+              {chestAvailable ? '🎁 Daily' : '🎁 Opened'}
+            </button>
             <button
               onClick={onOpenShop}
               title="Open the wardrobe & shop"
