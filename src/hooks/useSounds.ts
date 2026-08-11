@@ -1,18 +1,20 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 
 const MUTE_KEY = 'taskflow-sound-muted';
 
 /**
  * Tiny synthesized sound effects via WebAudio — no audio files needed.
- * The AudioContext is created lazily on the first playback (browsers require
- * a user gesture, which is always the case here since sounds play on clicks).
+ * Browsers suspend the AudioContext until the first user gesture (on hosted
+ * sites — not localhost!), so we unlock it once on the first interaction
+ * anywhere in the app, and delay tones slightly when the context was still
+ * suspended so the very first sounds are never dropped.
  */
 export function useSounds() {
   const [muted, setMuted] = useLocalStorage<boolean>(MUTE_KEY, false);
   const ctxRef = useRef<AudioContext | null>(null);
 
-  const getContext = useCallback((): AudioContext | null => {
+  const ensureContext = useCallback((): AudioContext | null => {
     try {
       if (!ctxRef.current) {
         const Ctor =
@@ -22,12 +24,43 @@ export function useSounds() {
         if (!Ctor) return null;
         ctxRef.current = new Ctor();
       }
-      if (ctxRef.current.state === 'suspended') void ctxRef.current.resume();
       return ctxRef.current;
     } catch {
       return null;
     }
   }, []);
+
+  // Unlock audio on the first gesture (pointer/key/touch) so the context is
+  // already running by the time any sound effect fires.
+  useEffect(() => {
+    const unlock = () => {
+      const ac = ensureContext();
+      if (ac && ac.state === 'suspended') void ac.resume();
+      window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('keydown', unlock);
+      window.removeEventListener('touchstart', unlock);
+      window.removeEventListener('click', unlock);
+    };
+    window.addEventListener('pointerdown', unlock);
+    window.addEventListener('keydown', unlock);
+    window.addEventListener('touchstart', unlock);
+    window.addEventListener('click', unlock);
+    return () => {
+      window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('keydown', unlock);
+      window.removeEventListener('touchstart', unlock);
+      window.removeEventListener('click', unlock);
+    };
+  }, [ensureContext]);
+
+  const getContext = useCallback((): AudioContext | null => {
+    const ac = ensureContext();
+    if (!ac) return null;
+    // Still suspended (first gesture in progress): kick off resume and let
+    // tone() shift its schedule so these notes are not lost.
+    if (ac.state === 'suspended') void ac.resume();
+    return ac;
+  }, [ensureContext]);
 
   /** Schedule a single tone. `start` is an offset in seconds. */
   const tone = useCallback(
@@ -42,7 +75,11 @@ export function useSounds() {
       const ac = getContext();
       if (!ac) return;
       try {
-        const t0 = ac.currentTime + start;
+        // While suspended, scheduled start times pass before the context
+        // wakes up — shift by a beat so the note still plays.
+        const suspended = ac.state === 'suspended';
+        const shift = suspended ? 0.12 : 0;
+        const t0 = ac.currentTime + start + shift;
         const osc = ac.createOscillator();
         const gain = ac.createGain();
         osc.type = type;

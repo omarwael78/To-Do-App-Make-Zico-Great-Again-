@@ -223,7 +223,8 @@ export default function App() {
     }
   }, [wardrobe.coins, sounds, notify]);
 
-  // Cheer the moment a new mascot character becomes unlocked
+  // Cheer the moment a new mascot character becomes unlocked — several can
+  // cross their thresholds at once, so they're batched into a single toast.
   const unlockedMascotsRef = useRef<Set<string> | null>(null);
   useEffect(() => {
     const unlockedNow = new Set(
@@ -233,13 +234,24 @@ export default function App() {
       unlockedMascotsRef.current = unlockedNow;
       return;
     }
-    for (const m of MASCOTS) {
-      if (m.unlock && unlockedNow.has(m.id) && !unlockedMascotsRef.current.has(m.id)) {
-        sounds.playLevelUp();
-        notify(`🎉 New mascot unlocked — ${m.emoji} ${m.name}!`, 'success');
-        unlockedMascotsRef.current.add(m.id);
-      }
+    const unlocked = unlockedMascotsRef.current;
+    const newlyUnlocked = MASCOTS.filter(
+      (m) => m.unlock && unlockedNow.has(m.id) && !unlocked.has(m.id)
+    );
+    if (newlyUnlocked.length === 0) return;
+    sounds.playLevelUp();
+    if (newlyUnlocked.length === 1) {
+      const m = newlyUnlocked[0];
+      notify(`🎉 New mascot unlocked — ${m.emoji} ${m.name}!`, 'success');
+    } else {
+      notify(
+        `🎉 ${newlyUnlocked.length} mascots unlocked — ${newlyUnlocked
+          .map((m) => `${m.emoji} ${m.name}`)
+          .join(', ')}!`,
+        'success'
+      );
     }
+    for (const m of newlyUnlocked) unlocked.add(m.id);
   }, [mascotMetrics, sounds, notify]);
 
   /* ---------- handlers with feedback ---------- */
