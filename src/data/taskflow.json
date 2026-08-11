@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "_readme": "This file lives inside the project and is the source of truth for your defaults. Edit 'dailyRoutine' to change the tasks TaskFlow always suggests, 'starterTasks' to change what appears on a brand-new day, and 'history' to pre-load past days. Your live day-to-day data is then kept in sync automatically in the browser.",
+
+  "dailyRoutine": [
+    "Plan the day",
+    "Check emails & messages",
+    "Deep work block (90 min)",
+    "Exercise / walk",
+    "Read for 20 minutes",
+    "Tidy up workspace",
+    "Review tomorrow's priorities"
+  ],
+
+  "starterTasks": [
+    "Set today's top 3 priorities",
+    "Drink a glass of water"
+  ],
+
+  "history": []
+}
