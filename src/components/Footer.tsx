@@ -1,12 +1,15 @@
 import { useRef } from 'react';
+import { cn } from '@/utils/cn';
 
 interface FooterProps {
   onReset: () => void;
   onExport: () => void;
   onImport: (file: File) => void;
+  unlockAll: boolean;
+  onToggleUnlockAll: () => void;
 }
 
-export default function Footer({ onReset, onExport, onImport }: FooterProps) {
+export default function Footer({ onReset, onExport, onImport, unlockAll, onToggleUnlockAll }: FooterProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +34,19 @@ export default function Footer({ onReset, onExport, onImport }: FooterProps) {
 
       {/* Backup & reset actions */}
       <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+        <button
+          onClick={onToggleUnlockAll}
+          title="Testing only — unlocks every mascot, owns and wears all gear, tops up coins"
+          className={cn(
+            'rounded-full border px-3 py-1 text-[11px] font-extrabold transition-transform hover:scale-105',
+            unlockAll
+              ? 'border-rose-200 bg-rose-50 text-rose-600 dark:border-rose-500/30 dark:bg-rose-500/15 dark:text-rose-400'
+              : 'border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 text-amber-600 dark:border-amber-500/30 dark:from-amber-500/10 dark:to-orange-500/10 dark:text-amber-400'
+          )}
+        >
+          {unlockAll ? '🔒 Relock (test off)' : '🧪 Unlock all (test)'}
+        </button>
+
         <button
           onClick={onExport}
           className="flex items-center gap-1 text-[11px] font-bold text-slate-400 transition-colors hover:text-violet-500 dark:text-slate-500 dark:hover:text-violet-400"

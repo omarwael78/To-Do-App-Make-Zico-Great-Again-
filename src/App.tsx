@@ -95,15 +95,32 @@ export default function App() {
 
   /** Effort metrics used to unlock mascot characters. */
   const mascotMetrics = useMemo(
-    () => ({
-      tasks: stats.doneAllTime,
-      streak: stats.bestStreak,
-      perfectDays: stats.perfectDays,
-      coins: wardrobe.coins,
-      bestDay: stats.bestDay,
-    }),
-    [stats.doneAllTime, stats.bestStreak, stats.perfectDays, stats.bestDay, wardrobe.coins]
+    () =>
+      wardrobe.unlockAll
+        ? { tasks: 99999, streak: 999, perfectDays: 999, coins: 99999, bestDay: 999 }
+        : {
+            tasks: stats.doneAllTime,
+            streak: stats.bestStreak,
+            perfectDays: stats.perfectDays,
+            coins: wardrobe.coins,
+            bestDay: stats.bestDay,
+          },
+    [stats.doneAllTime, stats.bestStreak, stats.perfectDays, stats.bestDay, wardrobe.coins, wardrobe.unlockAll]
   );
+
+  /** Test mode — unlock every mascot, gear kit and coin balance. */
+  const handleToggleUnlockAll = useCallback(() => {
+    const next = !wardrobe.unlockAll;
+    wardrobe.setUnlockAll(next);
+    if (next) {
+      wardrobe.addCoins(1000);
+      sounds.playLevelUp();
+      notify('🧪 Test mode — everything unlocked!', 'success');
+    } else {
+      sounds.playToggle();
+      notify('Test mode off — back to the real grind', 'info');
+    }
+  }, [wardrobe.unlockAll, wardrobe.setUnlockAll, wardrobe.addCoins, sounds, notify]);
 
   /* ---------- mascot mood & reactions ---------- */
   const allDone = counts.all > 0 && counts.completed === counts.all;
@@ -577,7 +594,13 @@ export default function App() {
           )}
         </main>
 
-        <Footer onReset={handleReset} onExport={handleExport} onImport={handleImportFile} />
+        <Footer
+          onReset={handleReset}
+          onExport={handleExport}
+          onImport={handleImportFile}
+          unlockAll={wardrobe.unlockAll}
+          onToggleUnlockAll={handleToggleUnlockAll}
+        />
       </div>
 
       {showConfetti && <CelebrationConfetti />}
