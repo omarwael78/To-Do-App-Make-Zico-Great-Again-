@@ -148,53 +148,63 @@ export default function MascotBanner({
         {/* Title + daily counts */}
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <h2 className={cn('flex items-center gap-1.5 text-sm font-extrabold', info.accent)}>
-              {info.title}
-              {allDone && <span className="animate-celebrate text-base">🎉</span>}
-            </h2>
-            <p className="mt-0.5 text-xs font-medium leading-relaxed text-slate-500 dark:text-slate-400">
+            <div className="flex items-center gap-2">
+              <span
+                aria-hidden="true"
+                className={cn('h-4 w-1 shrink-0 rounded-full', info.accent.replace('text-', 'bg-'))}
+              />
+              <h2 className={cn('min-w-0 truncate text-[15px] font-extrabold tracking-tight sm:text-base', info.accent)}>
+                {info.title}
+                {allDone && <span className="animate-celebrate ml-1 inline-block text-base">🎉</span>}
+              </h2>
+            </div>
+            <p className="mt-1 text-xs font-medium leading-relaxed text-slate-500 dark:text-slate-400">
               {allDone ? 'Every task complete — what a day!' : info.message}
             </p>
           </div>
 
-          <div className="flex shrink-0 flex-col items-end gap-1">
-            <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-extrabold text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
-              ✓ {completed} done
-            </span>
-            <span
-              className={cn(
-                'rounded-full px-2 py-0.5 text-[10px] font-extrabold',
-                active > 0
-                  ? 'bg-rose-50 text-rose-500 dark:bg-rose-500/15 dark:text-rose-400'
-                  : 'bg-slate-100 text-slate-400 dark:bg-slate-700/60 dark:text-slate-500'
-              )}
-            >
-              ⏳ {active} left
-            </span>
-            <button
-              onClick={onOpenChest}
-              disabled={!chestAvailable}
-              title={
-                chestAvailable
-                  ? 'Open your free daily chest!'
-                  : 'Daily chest opened — come back tomorrow'
-              }
-              className={cn(
-                'rounded-full px-2 py-0.5 text-[10px] font-extrabold transition-transform',
-                chestAvailable
-                  ? 'animate-celebrate border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 text-amber-600 hover:scale-105 dark:border-amber-500/30 dark:from-amber-500/10 dark:to-orange-500/10 dark:text-amber-400'
-                  : 'bg-slate-100 text-slate-400 dark:bg-slate-700/60 dark:text-slate-500'
-              )}
-            >
-              {chestAvailable ? '🎁 Daily' : '🎁 Opened'}
-            </button>
-            <button
-              onClick={onOpenShop}
-              title="Open the wardrobe & shop"
-              className="animate-pop rounded-full border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 px-2 py-0.5 text-[10px] font-extrabold text-amber-600 transition-transform hover:scale-105 dark:border-amber-500/30 dark:from-amber-500/10 dark:to-orange-500/10 dark:text-amber-400"
-            >
-              🪙 {coins}
-            </button>
+          <div className="flex shrink-0 flex-col items-end gap-1.5">
+            <div className="flex items-center gap-1">
+              <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-extrabold text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
+                ✓ {completed} done
+              </span>
+              <span
+                className={cn(
+                  'rounded-full px-2 py-0.5 text-[10px] font-extrabold',
+                  active > 0
+                    ? 'bg-rose-50 text-rose-500 dark:bg-rose-500/15 dark:text-rose-400'
+                    : 'bg-slate-100 text-slate-400 dark:bg-slate-700/60 dark:text-slate-500'
+                )}
+              >
+                ⏳ {active} left
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={onOpenChest}
+                disabled={!chestAvailable}
+                title={
+                  chestAvailable
+                    ? 'Open your free daily chest!'
+                    : 'Daily chest opened — come back tomorrow'
+                }
+                className={cn(
+                  'rounded-full px-2 py-0.5 text-[10px] font-extrabold transition-transform',
+                  chestAvailable
+                    ? 'animate-celebrate border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 text-amber-600 hover:scale-105 dark:border-amber-500/30 dark:from-amber-500/10 dark:to-orange-500/10 dark:text-amber-400'
+                    : 'bg-slate-100 text-slate-400 dark:bg-slate-700/60 dark:text-slate-500'
+                )}
+              >
+                {chestAvailable ? '🎁 Daily' : '🎁 Opened'}
+              </button>
+              <button
+                onClick={onOpenShop}
+                title="Open the wardrobe & shop"
+                className="animate-pop rounded-full border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 px-2 py-0.5 text-[10px] font-extrabold text-amber-600 transition-transform hover:scale-105 dark:border-amber-500/30 dark:from-amber-500/10 dark:to-orange-500/10 dark:text-amber-400"
+              >
+                🪙 {coins}
+              </button>
+            </div>
           </div>
         </div>
 

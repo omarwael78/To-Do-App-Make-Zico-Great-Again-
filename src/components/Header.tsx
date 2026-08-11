@@ -28,11 +28,11 @@ export default function Header({
   return (
     <header className="mb-6">
       <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           {/* Logo */}
-          <div className="relative">
+          <div className="relative shrink-0">
             <div className="absolute inset-0 rounded-2xl bg-violet-500 opacity-40 blur-lg" aria-hidden="true" />
-            <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 via-indigo-500 to-indigo-600 shadow-lg shadow-violet-500/40">
+            <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 via-indigo-500 to-indigo-600 shadow-lg shadow-violet-500/40">
               <svg className="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="9 11 12 14 22 4" />
                 <path d="M21 12v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
@@ -40,16 +40,23 @@ export default function Header({
             </div>
           </div>
 
-          <div>
-            <h1 className="text-xl font-extrabold leading-tight tracking-tight text-slate-800 dark:text-white sm:text-2xl">
-              Make Zico{' '}
-              <span className="animate-gradient-pan bg-gradient-to-r from-violet-500 via-indigo-500 to-fuchsia-500 bg-clip-text text-transparent">
-                Great Again
+          <div className="min-w-0">
+            <h1 className="truncate text-xl font-extrabold leading-tight tracking-tight sm:text-2xl">
+              <span className="animate-gradient-pan bg-gradient-to-r from-violet-500 via-fuchsia-500 to-amber-500 bg-clip-text text-transparent">
+                Make Zico Great Again
               </span>
             </h1>
-            <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">
-              {getGreeting()} · {dayLabel}
-            </p>
+            <div className="mt-1 flex flex-wrap items-center gap-1.5">
+              <span className="rounded-full bg-violet-50 px-2 py-0.5 text-[10px] font-extrabold text-violet-600 dark:bg-violet-500/15 dark:text-violet-300">
+                👋 {getGreeting()}
+              </span>
+              <span aria-hidden="true" className="text-[10px] font-bold text-slate-300 dark:text-slate-600">
+                •
+              </span>
+              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">
+                {dayLabel}
+              </span>
+            </div>
           </div>
         </div>
 
