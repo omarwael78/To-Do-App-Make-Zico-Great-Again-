@@ -611,6 +611,66 @@ export default function Mascot({
           </g>
         )}
 
+        {/* Bubble aura (shop) — rising bubbles */}
+        {has('bubbles') && (
+          <g aria-hidden="true">
+            <circle cx="22" cy="84" r="3" fill="none" stroke="#7dd3fc" strokeWidth="1.2" className="animate-bubble-rise" />
+            <circle cx="78" cy="88" r="2.2" fill="none" stroke="#7dd3fc" strokeWidth="1.1" className="animate-bubble-rise" style={{ animationDelay: '0.7s' }} />
+            <circle cx="12" cy="76" r="1.8" fill="none" stroke="#bae6fd" strokeWidth="1" className="animate-bubble-rise" style={{ animationDelay: '1.3s' }} />
+            <circle cx="88" cy="72" r="2.6" fill="none" stroke="#7dd3fc" strokeWidth="1.2" className="animate-bubble-rise" style={{ animationDelay: '0.4s' }} />
+          </g>
+        )}
+
+        {/* Flower petals (shop) — drifting petals */}
+        {has('petals') && (
+          <g aria-hidden="true">
+            <ellipse cx="20" cy="20" rx="2.4" ry="1.4" fill="#fb7185" className="animate-petal-fall" />
+            <ellipse cx="82" cy="12" rx="2" ry="1.2" fill="#f9a8d4" className="animate-petal-fall" style={{ animationDelay: '0.9s' }} />
+            <ellipse cx="10" cy="30" rx="1.8" ry="1" fill="#fda4af" className="animate-petal-fall" style={{ animationDelay: '1.6s' }} />
+            <ellipse cx="90" cy="28" rx="2.2" ry="1.3" fill="#fb7185" className="animate-petal-fall" style={{ animationDelay: '0.45s' }} />
+          </g>
+        )}
+
+        {/* Music notes (shop) — floating melody */}
+        {has('music') && (
+          <g aria-hidden="true">
+            <g className="animate-note-rise">
+              <ellipse cx="21" cy="40" rx="3" ry="2.2" fill="#a78bfa" transform="rotate(-18 21 40)" />
+              <line x1="24" y1="39" x2="24" y2="24" stroke="#a78bfa" strokeWidth="1.6" />
+              <path d="M24 24 Q30 22 32 27" fill="none" stroke="#a78bfa" strokeWidth="1.6" />
+            </g>
+            <g className="animate-note-rise" style={{ animationDelay: '1.1s' }}>
+              <ellipse cx="80" cy="46" rx="3" ry="2.2" fill="#f472b6" transform="rotate(-18 80 46)" />
+              <line x1="83" y1="45" x2="83" y2="30" stroke="#f472b6" strokeWidth="1.6" />
+              <path d="M83 30 Q89 28 91 33" fill="none" stroke="#f472b6" strokeWidth="1.6" />
+            </g>
+          </g>
+        )}
+
+        {/* Ice shards (shop) — floating crystals */}
+        {has('ice') && (
+          <g aria-hidden="true">
+            <g className="animate-ice-float">
+              <path d="M14 30 L16.5 24 L19 30 L16.5 36 Z" fill="#bae6fd" stroke="#7dd3fc" strokeWidth="0.8" />
+            </g>
+            <g className="animate-ice-float" style={{ animationDelay: '0.9s' }}>
+              <path d="M85 20 L87.5 14 L90 20 L87.5 26 Z" fill="#93c5fd" stroke="#60a5fa" strokeWidth="0.8" />
+            </g>
+            <g className="animate-ice-float" style={{ animationDelay: '1.6s' }}>
+              <path d="M90 40 L91.8 35 L93.6 40 L91.8 45 Z" fill="#bae6fd" stroke="#7dd3fc" strokeWidth="0.7" />
+            </g>
+          </g>
+        )}
+
+        {/* Fire flames (shop) — flickering warmth */}
+        {has('fire') && (
+          <g aria-hidden="true">
+            <path className="animate-fire-flicker" d="M18 92 Q16 84 20 80 Q22 77 21 74 Q24 80 26 84 Q28 88 25 92 Z" fill="#fb923c" />
+            <path className="animate-fire-flicker" style={{ animationDelay: '0.25s' }} d="M80 92 Q78 85 82 81 Q84 78 83 75 Q86 81 88 85 Q90 89 87 92 Z" fill="#f97316" />
+            <path className="animate-fire-flicker" style={{ animationDelay: '0.5s' }} d="M50 95 Q47 87 51 82 Q53 79 52 76 Q55 82 57 86 Q59 90 55 95 Z" fill="#fbbf24" />
+          </g>
+        )}
+
         {/* Cat pet (shop) */}
         {has('cat') && (
           <g className="animate-pet-bob" aria-hidden="true">
