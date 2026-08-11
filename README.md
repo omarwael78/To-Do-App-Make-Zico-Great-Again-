@@ -38,11 +38,19 @@ no accounts, no backend, no tracking — your data lives in your own browser.
 ### Mascot — Zico 🤖
 - A cute animated blob character that walks a **progress track** through your day —
   the more tasks you complete, the further Zico walks toward the 🚩 finish line
+- **Expressive face** — Zico never fakes it:
+  - **Idle**: with an empty list he cycles through neutral, **bored** ("...")
+    and **sleepy** ("z z z") faces instead of forcing a smile
+  - **Wow** 😮 wide eyes + open mouth when a task is completed
+  - **Laugh** 😆 squinting happy eyes + big smile on level-up
+  - **Meh** 🙄 flat half-lidded look when a task is un-checked
+  - **Pout** and extra tears when many tasks stay pending
+  - **Tongue out** 😛 + star eyes the moment everything is done
 - **Reacts to achieved tasks**: jumps with a celebration ring every time you check
   something off, gets star-sparkle eyes and rising hearts as you near 100%
 - **Reacts to missed tasks**: worried brows, sweat drops and tears flow faster the
   more tasks stay pending
-- **Happier with every 5-day streak milestone** — smile, sparkles, and a crown with confetti 🎉
+- **Happier with every 5-day streak milestone** — smile, sparkles, and confetti 🎉
 - **Sadder with each past day tasks were left unfinished** — droopy eyes, tears and
   a worried wiggle
 - **One-shot reactions**: a greeting wave on load, a jump on each completion, a
@@ -50,21 +58,67 @@ no accounts, no backend, no tracking — your data lives in your own browser.
 - Completing *everything* today triggers a **full-screen confetti rain**
 - **Streak milestone toasts** celebrate every 5th day (5, 10, 15…)
 - Character mood drives motivational messages tailored to how your day is going
+- **Sound effects** 🔔 — synthesized WebAudio (no files): task-complete pop, coin
+  ding, level-up fanfare, perfect-day arpeggio, shop chimes and a friendly buzz
+  when something is locked. Mute anytime with the 🔊/🔇 header toggle (remembered).
 
 ### Zico's gadget wardrobe 🎁
-Zico unlocks a new piece of gear every **5 days of streak** — each one appears on
-his model and lights up in the **Gear** gallery in the banner:
+Zico's **wardrobe** has two kinds of gear — streak items unlocked by staying
+productive, and shop items bought with **🪙 coins**. Open it anytime with the
+coin chip or the 🛒 Shop button in the banner. Wearing is fully up to you:
+**every item can be equipped or unequipped** once you own it.
+
+#### ⭐ Streak gear (unlocked every 5 streak days)
 
 | Streak | Gadget | Icon |
 |---|---|---|
 | **5 days** | Black glasses 🕶 | Cool shades with a shine |
 | **10 days** | Gold chain ⛓ | Gold links + star medallion |
-| **15 days** | Hero cape 🦸 | Flowing red cape that waves |
+| **15 days** | Hero cape 🦸 | Flowing red cape with gold trim |
 | **20 days** | Golden halo ✨ | Floating ring of light |
-| **25 days** | Royal crown 👑 | Grand gold crown with gems |
+| **25 days** | Royal crown 👑 | Grand gold crown — the exclusive 25-day piece |
+| **30 days** | Rainbow trail 🌈 | Shimmering rainbow arcs left in his wake |
 
-Locked gadgets stay greyed out with a tooltip showing how many days remain until
-the unlock. Level-up triggers a spin animation and a celebratory toast.
+Streak gear is **auto-worn** the moment it unlocks (with a spin + toast), and is
+removed automatically only if your streak ever slips below its tier.
+
+#### 🎁 Daily chest
+A free **daily chest** (5–15 🪙) waits in the banner every day — open it once,
+then it shows "Opened" until tomorrow.
+
+#### 🪙 Coin shop (earn 1 coin per completed task)
+
+| Price | Item | Icon | Rarity |
+|---|---|---|---|
+| 10 | Ninja headband | 🥷 | Common |
+| 15 | Street cap | 🧢 | Common |
+| 20 | Knight shield | 🛡 | Common |
+| 25 | Hero sword | ⚔ | Common |
+| 25 | Turtle pet | 🐢 | Rare |
+| 30 | Archer bow | 🏹 | Rare |
+| 30 | Cat pet | 🐈 | Rare |
+| 30 | Dog pet | 🐶 | Rare |
+| 35 | Top hat | 🎩 | Epic |
+| 35 | Magic wand | 🪄 | Rare |
+| 35 | Fairy wings | 🦋 | Epic |
+| 40 | Owl pet | 🦉 | Epic |
+| 40 | Sea trident | 🔱 | Epic |
+| 45 | Fox pet | 🦊 | Epic |
+| 45 | Lightning aura | ⚡ | Legendary |
+| 60 | Mini dragon | 🐲 | Legendary |
+
+Shop items are grouped by **category** (accessories / weapons / pets / effects)
+with **rarity** badges, and the modal doubles as a **dressing room** — a live
+preview of Zico updates with every change. A **"Wear all"** shortcut equips (or
+strips) everything you own in one tap.
+
+#### 🪙 Bonus coins
+- **Perfect day** — completing all tasks pays a **+5** bonus (with the confetti rain)
+- **End day** — capping a 100% day gives **+5**, a 50%+ day **+2**
+
+Purchased items are equipped immediately, and pets sit beside Zico, weapons are
+held at his side, and hats cover the crown. A `+N 🪙` popup floats up over the
+track every time you complete tasks.
 
 ### Experience
 - Animated **Today / History** view switcher with sliding highlight
@@ -122,6 +176,7 @@ Hit **"End day"** any time to archive manually.
 |---|---|---|
 | **Project defaults** | `src/data/taskflow.json` | Ships with the repo — routine suggestions, starter tasks and any pre-loaded history |
 | **Live daily data** | Browser `localStorage` (auto-synced) | Your actual tasks, history and learned suggestions — saved instantly, synced across tabs |
+| **Wardrobe & coins** | Browser `localStorage` (`taskflow-coins`, `taskflow-wardrobe-*`) | Coin balance, purchased items and what Zico is wearing right now |
 
 Data is stored under `taskflow-*` keys in your browser. Because it's browser-local, use
 **Export backup** to keep a copy, or to move your data to another device (import it there).
@@ -155,22 +210,25 @@ After editing, hit **"Reset to project defaults"** in the footer to reload from 
 
 ```
 src/
-├── data/taskflow.json        # project data file (your defaults)
+├── data/
+│   ├── taskflow.json        # project data file (your defaults)
+│   └── wardrobe.ts          # gadget catalog: streak gear + coin shop items
 ├── types/task.ts             # shared TypeScript types
 ├── hooks/
 │   ├── useLocalStorage.ts    # persisted state + cross-tab sync
 │   ├── useTheme.ts           # dark/light mode
 │   ├── useToasts.ts          # toast notifications
-│   └── useTaskData.ts        # tasks, history, suggestions, streak, daily rollover, backup
+│   ├── useTaskData.ts        # tasks, history, suggestions, streak, daily rollover, backup
+│   └── useWardrobe.ts        # coins, owned & equipped items, shop purchases
 ├── utils/
 │   ├── cn.ts                 # Tailwind class merging
 │   └── date.ts               # date helpers (formatting, rollover, greeting)
 ├── components/
 │   ├── Header.tsx            ThemeToggle.tsx    ViewSwitcher.tsx
 │   ├── Mascot.tsx            MascotBanner.tsx   CelebrationConfetti.tsx
-│   ├── DayOverview.tsx       ProgressRing.tsx   AddTaskForm.tsx
-│   ├── FilterTabs.tsx        TaskList.tsx       TaskItem.tsx
-│   ├── EmptyState.tsx        HistoryView.tsx
+│   ├── WardrobeModal.tsx     DayOverview.tsx    ProgressRing.tsx
+│   ├── AddTaskForm.tsx       FilterTabs.tsx     TaskList.tsx
+│   ├── TaskItem.tsx          EmptyState.tsx     HistoryView.tsx
 │   └── ToastStack.tsx        Footer.tsx
 └── App.tsx                   # composition root
 ```
