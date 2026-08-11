@@ -21,7 +21,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { MASCOTS, getMascot, isMascotUnlocked } from '@/data/mascots';
 import { STREAK_GADGETS, gadgetById } from '@/data/wardrobe';
 import { getDateString } from '@/utils/date';
-import { FilterType, ViewType, Task, Mood, Reaction } from '@/types/task';
+import { FilterType, ViewType, Task, Mood, Reaction, ReactionType, FaceVariant } from '@/types/task';
 
 export default function App() {
   const { theme, toggleTheme } = useTheme();
@@ -143,15 +143,30 @@ export default function App() {
     return 'very-sad';
   }, [streak, unfinishedStreak, counts, todayPct]);
 
-  // One-shot mascot animations: jump when a task is completed, sigh when un-checked
+  // One-shot mascot animations: a random face flashes for each progress /
+  // deprogress, then relaxes back to the mood face after a moment.
   const [reaction, setReaction] = useState<Reaction>({ id: 0, type: 'none' });
+  const PROGRESS_FACES: FaceVariant[] = ['wow', 'excited', 'wink', 'laugh', 'tongue'];
+  const DEPROGRESS_FACES: FaceVariant[] = ['meh', 'pout', 'ugh', 'sigh'];
+  const reactionTimer = useRef<number | null>(null);
+  const playReaction = useCallback((type: ReactionType, variant?: FaceVariant) => {
+    setReaction({ id: Date.now(), type, variant });
+    if (reactionTimer.current !== null) window.clearTimeout(reactionTimer.current);
+    reactionTimer.current = window.setTimeout(
+      () => setReaction({ id: Date.now(), type: 'none' }),
+      2600
+    );
+  }, []);
   const prevCompleted = useRef(counts.completed);
   useEffect(() => {
     const diff = counts.completed - prevCompleted.current;
     prevCompleted.current = counts.completed;
-    if (diff > 0) setReaction({ id: Date.now(), type: 'celebrate' });
-    else if (diff < 0) setReaction({ id: Date.now(), type: 'sigh' });
-  }, [counts.completed]);
+    if (diff > 0) {
+      playReaction('celebrate', PROGRESS_FACES[Math.floor(Math.random() * PROGRESS_FACES.length)]);
+    } else if (diff < 0) {
+      playReaction('sigh', DEPROGRESS_FACES[Math.floor(Math.random() * DEPROGRESS_FACES.length)]);
+    }
+  }, [counts.completed, playReaction]);
 
   // Batch celebration toasts: several achievements can trigger from the same
   // action (e.g. finishing the last task), so they merge into a single toast.
@@ -199,7 +214,7 @@ export default function App() {
     prevStreak.current = streak;
     if (streak <= prev || streak === 0 || streak % 5 !== 0) return;
 
-    setReaction({ id: Date.now(), type: 'levelup' });
+    playReaction('levelup');
     sounds.playLevelUp();
     const gadget = STREAK_GADGETS.find((g) => g.level === streak);
     celebrate(
@@ -214,7 +229,7 @@ export default function App() {
   // day ahead — only a run that truly outgrows every previous one counts.
   useEffect(() => {
     if (streak > stats.bestStreak + 1 && streak % 5 !== 0) {
-      setReaction({ id: Date.now(), type: 'levelup' });
+      playReaction('levelup');
       sounds.playPerfect();
       celebrate(`🏆 New record — ${streak}-day streak!`);
     }

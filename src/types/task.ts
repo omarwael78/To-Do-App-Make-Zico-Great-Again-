@@ -57,7 +57,23 @@ export type Mood =
 /** One-shot mascot animations replayed when `id` changes. */
 export type ReactionType = 'none' | 'celebrate' | 'sigh' | 'levelup';
 
+/**
+ * Which face to flash for a reaction. Progress faces fire when a task is
+ * completed; deprogress faces when one is un-checked.
+ */
+export type FaceVariant =
+  | 'wow'
+  | 'excited'
+  | 'wink'
+  | 'laugh'
+  | 'tongue'
+  | 'meh'
+  | 'pout'
+  | 'ugh'
+  | 'sigh';
+
 export interface Reaction {
   id: number;
   type: ReactionType;
+  variant?: FaceVariant;
 }
