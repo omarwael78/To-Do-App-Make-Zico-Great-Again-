@@ -74,10 +74,11 @@ no accounts, no backend, no tracking — your data lives in your own browser.
 
 ### 🎭 Zico's Friends
 Zico isn't alone! The **Zico's Friends tab** of the wardrobe lets you play as
-his whole crew — squishy blobs with their own palettes, and several with truly
-different silhouettes (tall jackal, wide lion, round sun, beaked falcon).
-All gear works on every character. Each friend has a **challenge** to earn,
-and a toast celebrates the moment one becomes available:
+his whole crew — each friend has its own palette, headdress and **body
+silhouette** (round blob, tall jackal, gumdrop, stone block, heart), yet every
+piece of gear, expression, reaction, animation and effect works on all of
+them. Each friend has a **challenge** to earn, and a toast celebrates the
+moment one becomes available:
 
 | Friend | Look | Challenge |
 |---|---|---|
@@ -86,10 +87,13 @@ and a toast celebrates the moment one becomes available:
 | **Khnum** 🐏 | Amber with ram horns | Reach a **14-day** best streak |
 | **Sobek** 🐊 | Green with croc spikes | Earn **10 perfect days** |
 | **Seth** 🌩️ | Yellow with lightning antenna | Save up **250 coins** |
-| **Anubis** 🐺 | Charcoal jackal — tall, ears + muzzle | Complete **30 tasks in one day** |
+| **Anubis** 🐺 | Charcoal jackal — **tall** body, ears + muzzle | Complete **30 tasks in one day** |
 | **Horus** 🦅 | Sky-blue falcon with beak + crest | Reach a **25-day** best streak |
-| **Bes** 🦁 | Golden lion — wide, with a mane | Save up **500 coins** |
+| **Bes** 🦁 | Golden lion — **block** body, fluffy mane | Save up **500 coins** |
 | **Ra** ☀️ | Red sun with rays | Complete **300 tasks** |
+| **Isis** 🌙 | Teal enchantress — **heart** body, moon-disc headdress | Earn **20 perfect days** |
+| **Ptah** 🛠️ | Slate craftsman — **block** body, atef cap | Save up **750 coins** |
+| **Neith** 🎯 | Cyan huntress — **gumdrop** body, double plume | Complete **40 tasks in one day** |
 
 Locked friends show their challenge progress bar in the modal; unlocked ones
 can be selected anytime, and the whole app (header, banner, track, empty

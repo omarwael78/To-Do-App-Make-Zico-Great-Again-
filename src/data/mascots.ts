@@ -18,8 +18,13 @@ export type MascotUnlock =
   | { type: 'coins'; goal: number }
   | { type: 'best-day'; goal: number };
 
-/** Silhouette of the body: subtle but visible differences between friends. */
-export type MascotShape = 'blob' | 'tall' | 'wide' | 'round';
+/**
+ * Silhouette of the body. Every shape shares the same "dressing window"
+ * (head top around y 4-22, sides near x 6-94, feet at y 93) so all of
+ * Zico's gear — hats, crown, cape, pets — fits every friend, and every
+ * expression, reaction and animation works on every shape.
+ */
+export type MascotShape = 'blob' | 'tall' | 'gumdrop' | 'block' | 'heart';
 
 export type MascotAccessory =
   | 'none'
@@ -30,7 +35,10 @@ export type MascotAccessory =
   | 'dog-ears'
   | 'beak'
   | 'mane'
-  | 'sun-rays';
+  | 'sun-rays'
+  | 'moon-disc'
+  | 'atef'
+  | 'plume';
 
 export interface MascotDef {
   id: string;
@@ -185,7 +193,7 @@ export const MASCOTS: MascotDef[] = [
       blush: '#fcd34d',
     },
     accessory: 'mane',
-    shape: 'wide',
+    shape: 'block',
     unlock: { type: 'coins', goal: 500 },
   },
   {
@@ -202,8 +210,59 @@ export const MASCOTS: MascotDef[] = [
       blush: '#fdba74',
     },
     accessory: 'sun-rays',
-    shape: 'round',
+    shape: 'blob',
     unlock: { type: 'tasks', goal: 300 },
+  },
+  {
+    id: 'isis',
+    name: 'Isis',
+    emoji: '🌙',
+    tagline: 'The great enchantress — a heart of pure magic.',
+    palette: {
+      from: '#5eead4',
+      to: '#0d9488',
+      outline: '#134e4a',
+      feet: '#0f766e',
+      belly: '#f0fdfa',
+      blush: '#5eead4',
+    },
+    accessory: 'moon-disc',
+    shape: 'heart',
+    unlock: { type: 'perfect-days', goal: 20 },
+  },
+  {
+    id: 'ptah',
+    name: 'Ptah',
+    emoji: '🛠️',
+    tagline: 'Master craftsman — solid as a block of stone.',
+    palette: {
+      from: '#94a3b8',
+      to: '#475569',
+      outline: '#1e293b',
+      feet: '#334155',
+      belly: '#f1f5f9',
+      blush: '#94a3b8',
+    },
+    accessory: 'atef',
+    shape: 'block',
+    unlock: { type: 'coins', goal: 750 },
+  },
+  {
+    id: 'neith',
+    name: 'Neith',
+    emoji: '🎯',
+    tagline: 'Goddess of the hunt — sharp, patient, unmissable.',
+    palette: {
+      from: '#67e8f9',
+      to: '#0891b2',
+      outline: '#164e63',
+      feet: '#0e7490',
+      belly: '#ecfeff',
+      blush: '#67e8f9',
+    },
+    accessory: 'plume',
+    shape: 'gumdrop',
+    unlock: { type: 'best-day', goal: 40 },
   },
 ];
 

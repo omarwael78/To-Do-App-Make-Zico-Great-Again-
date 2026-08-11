@@ -52,16 +52,16 @@ export default function Mascot({
   const p = skinDef.palette;
   const bodyGradient = `url(#mascot-body-${skinDef.id})`;
 
-  // Subtle silhouette differences per friend (scaled around the head so
-  // hats and crowns still sit right).
-  const bodyShape =
-    skinDef.shape === 'tall'
-      ? 'translate(50 18) scale(0.94 1.05) translate(-50 -18)'
-      : skinDef.shape === 'wide'
-        ? 'translate(50 18) scale(1.1 0.94) translate(-50 -18)'
-        : skinDef.shape === 'round'
-          ? 'translate(50 18) scale(1.06 1.05) translate(-50 -18)'
-          : undefined;
+  // Body silhouettes. Every path shares the same anchors — head top around
+  // (50, 5), sides near (6-94, 45-55), bottom (50, 92) — so faces, hats,
+  // capes and pets sit correctly on any shape.
+  const BODY_PATHS: Record<string, string> = {
+    blob: 'M50 5 C66 4 82 8 90 22 C97 35 95 52 89 64 C83 77 73 88 60 92 C47 96 34 94 24 86 C13 78 7 64 6 49 C5 34 12 20 23 12 C32 6 42 5 50 5 Z',
+    tall: 'M50 4 C58 4 64 7 68 12 C78 22 92 30 93 46 C94 62 89 76 80 85 C70 94 59 96 50 96 C41 96 30 94 20 85 C11 76 6 62 7 46 C8 30 22 22 32 12 C36 7 42 4 50 4 Z',
+    gumdrop: 'M50 6 C56 6 62 10 67 16 C77 28 92 36 93 52 C94 68 88 82 78 89 C68 95 58 96 50 96 C42 96 32 95 22 89 C12 82 6 68 7 52 C8 36 23 28 33 16 C38 10 44 6 50 6 Z',
+    block: 'M50 7 C56 7 62 8 68 10 C80 14 90 22 92 36 C94 50 93 66 88 80 C83 91 69 95 50 95 C31 95 17 91 12 80 C7 66 6 50 8 36 C10 22 20 14 32 10 C38 8 44 7 50 7 Z',
+    heart: 'M50 16 C48 8 38 2 28 6 C16 10 10 24 14 38 C18 52 34 70 50 95 C66 70 82 52 86 38 C90 24 84 10 72 6 C62 2 52 8 50 16 Z',
+  };
   const [waving, setWaving] = useState(false);
 
   useEffect(() => {
@@ -342,15 +342,36 @@ export default function Mascot({
             <path d="M70 19 L78 10 L66 14 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
           </g>
         )}
+        {skinDef.accessory === 'moon-disc' && (
+          <g aria-hidden="true">
+            <path d="M30 14 C23 4 25 -5 33 -7 C27 0 30 7 37 11 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M70 14 C77 4 75 -5 67 -7 C73 0 70 7 63 11 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <circle cx="50" cy="3" r="6" fill={p.blush} stroke={p.outline} strokeWidth="1.2" />
+            <circle cx="47.8" cy="1.6" r="1.4" fill="#ffffff" opacity="0.7" />
+          </g>
+        )}
+        {skinDef.accessory === 'atef' && (
+          <g aria-hidden="true">
+            <path d="M37 12 L37 3 Q37 1 39 1 L61 1 Q63 1 63 3 L63 12 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M37 6 L63 6 L63 9 L37 9 Z" fill={p.blush} opacity="0.85" />
+            <circle cx="50" cy="1" r="2.4" fill={p.blush} stroke={p.outline} strokeWidth="0.9" />
+          </g>
+        )}
+        {skinDef.accessory === 'plume' && (
+          <g aria-hidden="true">
+            <path d="M46 9 C43 0 44 -6 48 -9 C51 -6 51 0 50 9 Z" fill={p.feet} stroke={p.outline} strokeWidth="1" strokeLinejoin="round" />
+            <path d="M54 9 C57 0 56 -6 52 -9 C49 -6 49 0 50 9 Z" fill={p.feet} stroke={p.outline} strokeWidth="1" strokeLinejoin="round" />
+          </g>
+        )}
 
         {/* Nub arms (behind the body edge) */}
         <ellipse cx="16" cy="68" rx="5.5" ry="8.5" fill={bodyGradient} stroke={p.outline} strokeWidth="1.6" transform="rotate(24 16 68)" />
         <ellipse cx="84" cy="68" rx="5.5" ry="8.5" fill={bodyGradient} stroke={p.outline} strokeWidth="1.6" transform="rotate(-24 84 68)" />
 
-        {/* Body (optionally reshaped per friend) */}
-        <g transform={bodyShape}>
+        {/* Body (silhouette per friend) */}
+        <g>
           <path
-            d="M50 5 C66 4 82 8 90 22 C97 35 95 52 89 64 C83 77 73 88 60 92 C47 96 34 94 24 86 C13 78 7 64 6 49 C5 34 12 20 23 12 C32 6 42 5 50 5 Z"
+            d={BODY_PATHS[skinDef.shape]}
             fill={bodyGradient}
             stroke={p.outline}
             strokeWidth="2.2"
