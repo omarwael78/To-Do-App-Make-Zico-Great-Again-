@@ -153,6 +153,24 @@ export default function App() {
     else if (diff < 0) setReaction({ id: Date.now(), type: 'sigh' });
   }, [counts.completed]);
 
+  // Batch celebration toasts: several achievements can trigger from the same
+  // action (e.g. finishing the last task), so they merge into a single toast.
+  const celebrationQueue = useRef<string[]>([]);
+  const celebrationTimer = useRef<number | null>(null);
+  const celebrate = useCallback(
+    (message: string) => {
+      celebrationQueue.current.push(message);
+      if (celebrationTimer.current !== null) return;
+      celebrationTimer.current = window.setTimeout(() => {
+        celebrationTimer.current = null;
+        const msgs = celebrationQueue.current;
+        celebrationQueue.current = [];
+        notify(msgs.length === 1 ? msgs[0] : msgs.join('  ·  '), 'success');
+      }, 400);
+    },
+    [notify]
+  );
+
   // Full-screen confetti the moment everything is done + a "perfect day" bonus
   const [showConfetti, setShowConfetti] = useState(false);
   const prevAllDone = useRef(allDone);
@@ -162,10 +180,10 @@ export default function App() {
       wardrobe.addCoins(5);
       setCoinFx({ id: Date.now(), amount: 5 });
       sounds.playPerfect();
-      notify('Perfect day — bonus +5 🪙!', 'success');
+      celebrate('Perfect day — bonus +5 🪙!');
     }
     prevAllDone.current = allDone;
-  }, [allDone, wardrobe.addCoins, sounds, notify]);
+  }, [allDone, wardrobe.addCoins, sounds, celebrate]);
 
   useEffect(() => {
     if (!showConfetti) return;
@@ -184,28 +202,23 @@ export default function App() {
     setReaction({ id: Date.now(), type: 'levelup' });
     sounds.playLevelUp();
     const gadget = STREAK_GADGETS.find((g) => g.level === streak);
-    notify(
+    celebrate(
       gadget
         ? `🔥 ${streak}-day streak — Zico unlocked ${gadget.name}!`
-        : `🔥 ${streak}-day streak — Zico leveled up!`,
-      'success'
+        : `🔥 ${streak}-day streak — Zico leveled up!`
     );
-  }, [streak, sounds, notify]);
+  }, [streak, sounds, celebrate]);
 
-  // Celebrate beating the all-time best streak (level-up multiples are
-  // already celebrated above, so they are skipped here).
-  const prevBestStreak = useRef<number | null>(null);
+  // Celebrate beating the all-time best streak. `bestStreak` excludes today,
+  // while `streak` includes it, so a healthy streak always sits exactly one
+  // day ahead — only a run that truly outgrows every previous one counts.
   useEffect(() => {
-    if (prevBestStreak.current === null) {
-      prevBestStreak.current = stats.bestStreak;
-      return;
-    }
-    if (streak > stats.bestStreak && streak % 5 !== 0) {
+    if (streak > stats.bestStreak + 1 && streak % 5 !== 0) {
       setReaction({ id: Date.now(), type: 'levelup' });
       sounds.playPerfect();
-      notify(`🏆 New record — ${streak}-day streak!`, 'success');
+      celebrate(`🏆 New record — ${streak}-day streak!`);
     }
-  }, [streak, stats.bestStreak, sounds, notify]);
+  }, [streak, stats.bestStreak, sounds, celebrate]);
 
   // Celebrate coin milestones — 50 / 100 / 200 / 500 saved up
   const COIN_MILESTONES = [50, 100, 200, 500];
@@ -219,9 +232,9 @@ export default function App() {
     );
     if (crossed) {
       sounds.playLevelUp();
-      notify(`🪙 ${crossed} coins saved — Zico is impressed!`, 'success');
+      celebrate(`🪙 ${crossed} coins saved — Zico is impressed!`);
     }
-  }, [wardrobe.coins, sounds, notify]);
+  }, [wardrobe.coins, sounds, celebrate]);
 
   // Cheer the moment a new mascot character becomes unlocked — several can
   // cross their thresholds at once, so they're batched into a single toast.
@@ -242,17 +255,16 @@ export default function App() {
     sounds.playLevelUp();
     if (newlyUnlocked.length === 1) {
       const m = newlyUnlocked[0];
-      notify(`🎉 New mascot unlocked — ${m.emoji} ${m.name}!`, 'success');
+      celebrate(`🎉 New mascot unlocked — ${m.emoji} ${m.name}!`);
     } else {
-      notify(
+      celebrate(
         `🎉 ${newlyUnlocked.length} mascots unlocked — ${newlyUnlocked
           .map((m) => `${m.emoji} ${m.name}`)
-          .join(', ')}!`,
-        'success'
+          .join(', ')}!`
       );
     }
     for (const m of newlyUnlocked) unlocked.add(m.id);
-  }, [mascotMetrics, sounds, notify]);
+  }, [mascotMetrics, sounds, celebrate]);
 
   /* ---------- handlers with feedback ---------- */
   /** Completing a task earns 1 coin — Zico's shop currency. */
@@ -497,7 +509,11 @@ export default function App() {
           streak={streak}
           coins={wardrobe.coins}
           muted={sounds.muted}
-          onToggleSound={() => sounds.setMuted(!sounds.muted)}
+          onToggleSound={() => {
+            const next = !sounds.muted;
+            sounds.setMuted(next);
+            if (!next) sounds.playCoin();
+          }}
           mascot={wardrobe.mascot}
         />
 

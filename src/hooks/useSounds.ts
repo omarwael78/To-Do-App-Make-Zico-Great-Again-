@@ -69,7 +69,7 @@ export function useSounds() {
       start: number,
       dur: number,
       type: OscillatorType = 'sine',
-      vol = 0.18
+      vol = 0.22
     ) => {
       if (muted) return;
       const ac = getContext();
@@ -100,14 +100,14 @@ export function useSounds() {
 
   /** Task completed — bright double blip. */
   const playComplete = useCallback(() => {
-    tone(660, 0, 0.11, 'triangle', 0.16);
-    tone(990, 0.06, 0.16, 'triangle', 0.16);
+    tone(660, 0, 0.11, 'triangle', 0.2);
+    tone(990, 0.06, 0.16, 'triangle', 0.2);
   }, [tone]);
 
   /** Coin earned — sparkly high ding. */
   const playCoin = useCallback(() => {
-    tone(1318, 0, 0.16, 'sine', 0.2);
-    tone(1760, 0.06, 0.28, 'sine', 0.12);
+    tone(1318, 0, 0.16, 'sine', 0.24);
+    tone(1760, 0.06, 0.28, 'sine', 0.14);
   }, [tone]);
 
   /** Streak level-up — rising fanfare. */
