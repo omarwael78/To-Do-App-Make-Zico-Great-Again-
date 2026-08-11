@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '@/utils/cn';
 import Mascot from './Mascot';
 import {
@@ -150,14 +150,58 @@ export default function WardrobeModal({
 }: WardrobeModalProps) {
   const [tab, setTab] = useState<'streak' | 'shop'>('streak');
 
-  // Close on Escape while open
+  // Accessibility while open: lock body scroll, move focus in, trap Tab
+  // inside the dialog, restore focus (and scrolling) when it closes.
+  const dialogRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!open) return;
+
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const dialog = dialogRef.current;
+    const focusables = () =>
+      Array.from(
+        dialog?.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        ) ?? []
+      ).filter((el) => !el.hasAttribute('disabled') && el.offsetParent !== null);
+
+    const first = focusables()[0];
+    if (dialog && !dialog.contains(document.activeElement)) {
+      (first ?? dialog).focus();
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const items = focusables();
+      if (items.length === 0) return;
+      const firstEl = items[0];
+      const lastEl = items[items.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      const isInside = dialog?.contains(active);
+      if (e.shiftKey) {
+        if (!isInside || active === firstEl) {
+          e.preventDefault();
+          lastEl.focus();
+        }
+      } else if (!isInside || active === lastEl) {
+        e.preventDefault();
+        firstEl.focus();
+      }
     };
+
     window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previouslyFocused?.focus();
+    };
   }, [open, onClose]);
 
   const ownedSet = useMemo(() => new Set(owned), [owned]);
@@ -185,6 +229,7 @@ export default function WardrobeModal({
       aria-label="Wardrobe and shop"
     >
       <div
+        ref={dialogRef}
         className="animate-fade-in-scale flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl"
         onClick={(e) => e.stopPropagation()}
       >
