@@ -186,6 +186,22 @@ export default function App() {
     }
   }, [streak, stats.bestStreak, sounds, notify]);
 
+  // Celebrate coin milestones — 50 / 100 / 200 / 500 saved up
+  const COIN_MILESTONES = [50, 100, 200, 500];
+  const prevCoins = useRef(wardrobe.coins);
+  useEffect(() => {
+    const prev = prevCoins.current;
+    prevCoins.current = wardrobe.coins;
+    if (wardrobe.coins <= prev) return;
+    const crossed = COIN_MILESTONES.find(
+      (m) => prev < m && wardrobe.coins >= m
+    );
+    if (crossed) {
+      sounds.playLevelUp();
+      notify(`🪙 ${crossed} coins saved — Zico is impressed!`, 'success');
+    }
+  }, [wardrobe.coins, sounds, notify]);
+
   /* ---------- handlers with feedback ---------- */
   /** Completing a task earns 1 coin — Zico's shop currency. */
   const handleToggleTask = useCallback(
