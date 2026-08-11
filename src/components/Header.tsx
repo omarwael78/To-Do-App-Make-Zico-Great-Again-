@@ -7,9 +7,18 @@ interface HeaderProps {
   onToggleTheme: () => void;
   streak: number;
   coins: number;
+  muted: boolean;
+  onToggleSound: () => void;
 }
 
-export default function Header({ theme, onToggleTheme, streak, coins }: HeaderProps) {
+export default function Header({
+  theme,
+  onToggleTheme,
+  streak,
+  coins,
+  muted,
+  onToggleSound,
+}: HeaderProps) {
   const dayLabel = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'long',
@@ -45,7 +54,17 @@ export default function Header({ theme, onToggleTheme, streak, coins }: HeaderPr
         </div>
 
         <div className="flex flex-col items-end gap-2">
-          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={onToggleSound}
+              title={muted ? 'Unmute sounds' : 'Mute sounds'}
+              aria-label={muted ? 'Unmute sounds' : 'Mute sounds'}
+              className="flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200 bg-white/70 text-sm shadow-sm transition-colors hover:border-violet-300 dark:border-slate-700 dark:bg-slate-800/60 dark:hover:border-violet-500/50"
+            >
+              {muted ? '🔇' : '🔊'}
+            </button>
+            <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+          </div>
           <div className="flex items-center gap-1.5">
             {streak > 0 && (
               <span

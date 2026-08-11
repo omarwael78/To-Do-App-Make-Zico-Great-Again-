@@ -16,6 +16,7 @@ import { useTaskData } from '@/hooks/useTaskData';
 import { useTheme } from '@/hooks/useTheme';
 import { useToasts } from '@/hooks/useToasts';
 import { useWardrobe } from '@/hooks/useWardrobe';
+import { useSounds } from '@/hooks/useSounds';
 import { STREAK_GADGETS, gadgetById } from '@/data/wardrobe';
 import { getDateString } from '@/utils/date';
 import { FilterType, ViewType, Task, Mood, Reaction } from '@/types/task';
@@ -47,6 +48,7 @@ export default function App() {
   } = useTaskData();
 
   const wardrobe = useWardrobe(streak);
+  const sounds = useSounds();
 
   const [filter, setFilter] = useState<FilterType>('all');
   const [view, setView] = useState<ViewType>('today');
@@ -117,10 +119,11 @@ export default function App() {
       setShowConfetti(true);
       wardrobe.addCoins(5);
       setCoinFx({ id: Date.now(), amount: 5 });
+      sounds.playPerfect();
       notify('Perfect day — bonus +5 🪙!', 'success');
     }
     prevAllDone.current = allDone;
-  }, [allDone, wardrobe.addCoins, notify]);
+  }, [allDone, wardrobe.addCoins, sounds, notify]);
 
   useEffect(() => {
     if (!showConfetti) return;
@@ -137,6 +140,7 @@ export default function App() {
     if (streak <= prev || streak === 0 || streak % 5 !== 0) return;
 
     setReaction({ id: Date.now(), type: 'levelup' });
+    sounds.playLevelUp();
     const gadget = STREAK_GADGETS.find((g) => g.level === streak);
     notify(
       gadget
@@ -144,7 +148,7 @@ export default function App() {
         : `🔥 ${streak}-day streak — Zico leveled up!`,
       'success'
     );
-  }, [streak, notify]);
+  }, [streak, sounds, notify]);
 
   /* ---------- handlers with feedback ---------- */
   /** Completing a task earns 1 coin — Zico's shop currency. */
@@ -154,10 +158,12 @@ export default function App() {
       if (task && !task.completed) {
         wardrobe.addCoins(1);
         setCoinFx({ id: Date.now(), amount: 1 });
+        sounds.playComplete();
+        sounds.playCoin();
       }
       toggleTask(id);
     },
-    [tasks, toggleTask, wardrobe.addCoins]
+    [tasks, toggleTask, wardrobe.addCoins, sounds]
   );
 
   /** "Mark all done" pays out a coin for every pending task. */
@@ -167,15 +173,21 @@ export default function App() {
     if (amount > 0) {
       wardrobe.addCoins(amount);
       setCoinFx({ id: Date.now(), amount });
+      sounds.playComplete();
+      sounds.playCoin();
     }
     toggleAll();
-  }, [counts, toggleAll, wardrobe.addCoins]);
+  }, [counts, toggleAll, wardrobe.addCoins, sounds]);
 
   /** Equip/unequip from the gear strip — explains the lock if refused. */
   const handleToggleEquip = useCallback(
     (id: string) => {
       const res = wardrobe.toggleEquip(id);
-      if (res.ok) return;
+      if (res.ok) {
+        sounds.playToggle();
+        return;
+      }
+      sounds.playLocked();
       const gadget = gadgetById(id);
       if (!gadget) return;
       if (res.reason === 'streak') {
@@ -184,7 +196,7 @@ export default function App() {
         notify(`${gadget.name} isn't yours yet — buy it with coins in the Shop`, 'info');
       }
     },
-    [wardrobe.toggleEquip, notify]
+    [wardrobe.toggleEquip, sounds, notify]
   );
 
   /** Buy from the shop — toasts the outcome. */
@@ -193,13 +205,15 @@ export default function App() {
       const gadget = gadgetById(id);
       const ok = wardrobe.buyItem(id);
       if (ok && gadget) {
+        sounds.playBuy();
         notify(`Purchased ${gadget.name} — ${gadget.icon}`, 'success');
       } else if (!ok && gadget) {
+        sounds.playLocked();
         notify('Not enough coins — finish more tasks to earn 🪙', 'error');
       }
       return ok;
     },
-    [wardrobe.buyItem, notify]
+    [wardrobe.buyItem, sounds, notify]
   );
 
   const handleAdd = useCallback(
@@ -239,6 +253,7 @@ export default function App() {
     if (bonus > 0) {
       wardrobe.addCoins(bonus);
       setCoinFx({ id: Date.now(), amount: bonus });
+      sounds.playCoin();
     }
     endDay();
     setFilter('all');
@@ -249,7 +264,7 @@ export default function App() {
         : `Day saved — ${done}/${total} completed`,
       'success'
     );
-  }, [endDay, counts, wardrobe.addCoins, notify]);
+  }, [endDay, counts, wardrobe.addCoins, sounds, notify]);
 
   const handleClearHistory = useCallback(() => {
     if (window.confirm('Delete all saved history? This cannot be undone.')) {
@@ -362,6 +377,8 @@ export default function App() {
           onToggleTheme={toggleTheme}
           streak={streak}
           coins={wardrobe.coins}
+          muted={sounds.muted}
+          onToggleSound={() => sounds.setMuted(!sounds.muted)}
         />
 
         <ViewSwitcher current={view} onChange={setView} historyCount={history.length} />
