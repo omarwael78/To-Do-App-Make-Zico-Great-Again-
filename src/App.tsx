@@ -97,15 +97,24 @@ export default function App() {
   const mascotMetrics = useMemo(
     () =>
       wardrobe.unlockAll
-        ? { tasks: 99999, streak: 999, perfectDays: 999, coins: 99999, bestDay: 999 }
+        ? { tasks: 99999, streak: 999, perfectDays: 999, coins: 99999, bestDay: 999, tracked: 999 }
         : {
             tasks: stats.doneAllTime,
             streak: stats.bestStreak,
             perfectDays: stats.perfectDays,
             coins: wardrobe.coins,
             bestDay: stats.bestDay,
+            tracked: stats.daysTracked,
           },
-    [stats.doneAllTime, stats.bestStreak, stats.perfectDays, stats.bestDay, wardrobe.coins, wardrobe.unlockAll]
+    [
+      stats.doneAllTime,
+      stats.bestStreak,
+      stats.perfectDays,
+      stats.bestDay,
+      stats.daysTracked,
+      wardrobe.coins,
+      wardrobe.unlockAll,
+    ]
   );
 
   /** Test mode — unlock every mascot, gear kit and coin balance. */
@@ -449,11 +458,9 @@ export default function App() {
   /* ---------- live tab title ---------- */
 
   useEffect(() => {
-    document.title =
-      counts.active > 0
-        ? `(${counts.active}) Make Zico Great Again`
-        : 'Make Zico Great Again';
-  }, [counts.active]);
+    const title = `Make ${getMascot(wardrobe.mascot).name} Great Again`;
+    document.title = counts.active > 0 ? `(${counts.active}) ${title}` : title;
+  }, [counts.active, wardrobe.mascot]);
 
   /* ---------- keyboard shortcuts ---------- */
   useEffect(() => {

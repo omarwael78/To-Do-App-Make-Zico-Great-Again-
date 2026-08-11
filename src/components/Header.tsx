@@ -2,6 +2,7 @@ import ThemeToggle from './ThemeToggle';
 import Mascot from './Mascot';
 import { Theme } from '@/types/task';
 import { getGreeting } from '@/utils/date';
+import { getMascot } from '@/data/mascots';
 
 interface HeaderProps {
   theme: Theme;
@@ -22,6 +23,7 @@ export default function Header({
   onToggleSound,
   mascot,
 }: HeaderProps) {
+  const mascotName = getMascot(mascot).name;
   const dayLabel = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'long',
@@ -43,7 +45,7 @@ export default function Header({
           <div className="min-w-0">
             <h1 className="truncate text-xl font-extrabold leading-tight tracking-tight sm:text-2xl">
               <span className="animate-gradient-pan bg-gradient-to-r from-violet-500 via-fuchsia-500 to-amber-500 bg-clip-text text-transparent">
-                Make Zico Great Again
+                Make {mascotName} Great Again
               </span>
             </h1>
             <div className="mt-1 flex flex-wrap items-center gap-1.5">

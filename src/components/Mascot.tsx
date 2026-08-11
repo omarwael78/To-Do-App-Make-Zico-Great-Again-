@@ -61,6 +61,7 @@ export default function Mascot({
     gumdrop: 'M50 6 C56 6 62 10 67 16 C77 28 92 36 93 52 C94 68 88 82 78 89 C68 95 58 96 50 96 C42 96 32 95 22 89 C12 82 6 68 7 52 C8 36 23 28 33 16 C38 10 44 6 50 6 Z',
     block: 'M50 7 C56 7 62 8 68 10 C80 14 90 22 92 36 C94 50 93 66 88 80 C83 91 69 95 50 95 C31 95 17 91 12 80 C7 66 6 50 8 36 C10 22 20 14 32 10 C38 8 44 7 50 7 Z',
     heart: 'M50 16 C48 8 38 2 28 6 C16 10 10 24 14 38 C18 52 34 70 50 95 C66 70 82 52 86 38 C90 24 84 10 72 6 C62 2 52 8 50 16 Z',
+    egg: 'M50 4 C60 4 68 8 73 16 C82 30 92 40 92 52 C92 68 84 80 72 87 C64 91 57 92 50 92 C43 92 36 91 28 87 C16 80 8 68 8 52 C8 40 18 30 27 16 C32 8 40 4 50 4 Z',
   };
   const [waving, setWaving] = useState(false);
 
@@ -170,57 +171,15 @@ export default function Mascot({
         {/* Ground shadow */}
         <ellipse cx="50" cy="95" rx="20" ry="3.5" fill="#0f172a" opacity="0.12" />
 
-        {/* Rainbow trail (streak 30+) — shimmering arcs behind Zico */}
+        {/* Rainbow trail (streak 30+) — shimmering arcs behind Zico, ends poking out at the sides */}
         {has('rainbow') && (
           <g className="animate-rainbow-shimmer" aria-hidden="true">
-            <path d="M22 87 Q50 62 78 87" fill="none" stroke="#f87171" strokeWidth="3" strokeLinecap="round" />
-            <path d="M26 90.5 Q50 68 74 90.5" fill="none" stroke="#fbbf24" strokeWidth="3" strokeLinecap="round" />
-            <path d="M30 94 Q50 74 70 94" fill="none" stroke="#34d399" strokeWidth="3" strokeLinecap="round" />
-            <path d="M34 97.5 Q50 80 66 97.5" fill="none" stroke="#60a5fa" strokeWidth="3" strokeLinecap="round" />
+            <path d="M10 86 Q50 56 90 86" fill="none" stroke="#f87171" strokeWidth="3" strokeLinecap="round" />
+            <path d="M13 90 Q50 64 87 90" fill="none" stroke="#fbbf24" strokeWidth="3" strokeLinecap="round" />
+            <path d="M16 94 Q50 72 84 94" fill="none" stroke="#34d399" strokeWidth="3" strokeLinecap="round" />
+            <path d="M19 98 Q50 80 81 98" fill="none" stroke="#60a5fa" strokeWidth="3" strokeLinecap="round" />
           </g>
         )}
-
-        {/* Screen-space burst ring on completion */}
-        {celebrate && (
-          <ellipse
-            className="animate-ring-pulse"
-            cx="50"
-            cy="92"
-            rx="14"
-            ry="4.5"
-            fill="none"
-            stroke="#a78bfa"
-            strokeWidth="3"
-          />
-        )}
-
-        {/* Level-up gold burst */}
-        {levelUp && (
-          <g aria-hidden="true">
-            <ellipse
-              className="animate-ring-pulse"
-              cx="50"
-              cy="92"
-              rx="14"
-              ry="4.5"
-              fill="none"
-              stroke="#fbbf24"
-              strokeWidth="3.5"
-            />
-            <g transform="translate(18, 18) scale(1.3)">
-              <path className="mascot-sparkle" d="M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z" fill="#fbbf24" />
-            </g>
-            <g transform="translate(84, 26) scale(1)">
-              <path className="mascot-sparkle" d="M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z" fill="#f472b6" style={{ animationDelay: '0.15s' }} />
-            </g>
-            <g transform="translate(72, 6) scale(0.9)">
-              <path className="mascot-sparkle" d="M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z" fill="#34d399" style={{ animationDelay: '0.3s' }} />
-            </g>
-          </g>
-        )}
-
-        {/* Sigh puff on un-check */}
-        {sighing && <circle className="animate-puff-rise" cx="30" cy="44" r="4.2" fill="#cbd5e1" />}
 
         {/* Confetti (ecstatic) */}
         {ecstatic && (
@@ -241,41 +200,41 @@ export default function Mascot({
           </g>
         )}
 
-        {/* Hero cape (behind body) — bright red with gold trim */}
+        {/* Hero cape (behind body) — bright red with gold trim, wider than the body so it shows at the sides */}
         {hasCape && (
           <g aria-hidden="true">
             <path
               className="animate-cape-wave"
-              d="M40 36 C22 42 10 58 14 80 C16 92 28 98 44 98 C47 98 50 88 50 80 C50 88 53 98 56 98 C72 98 84 92 86 80 C90 58 78 42 60 36 Z"
+              d="M44 33 C18 38 3 54 6 79 C8 92 19 99 42 99 C46 99 49 91 50 83 C51 91 54 99 58 99 C81 99 92 92 94 79 C97 54 82 38 56 33 Z"
               fill="url(#mascot-cape)"
               stroke="#fbbf24"
               strokeWidth="2.4"
               strokeLinejoin="round"
             />
-            <circle cx="50" cy="38" r="3.2" fill="#fbbf24" stroke="#b45309" strokeWidth="1.2" />
+            <circle cx="50" cy="36" r="3.2" fill="#fbbf24" stroke="#b45309" strokeWidth="1.2" />
           </g>
         )}
 
-        {/* Fairy wings (shop) — flutter behind the body */}
+        {/* Fairy wings (shop) — flutter behind the body, poking out at the sides */}
         {has('wings') && (
           <g aria-hidden="true">
-            <g className="animate-wing-flutter">
+            <g className="animate-wing-flutter" style={{ transformOrigin: '16px 52px' }}>
               <path
-                d="M48 50 C38 34 22 34 16 46 C12 55 20 66 34 68 C42 69 47 64 48 57 Z"
+                d="M16 52 C8 36 1 31 2 42 C3 51 7 60 19 64 C24 66 27 62 25 57 C23 54 17 54 16 52 Z"
                 fill="rgba(232, 121, 249, 0.7)"
                 stroke="#c026d3"
                 strokeWidth="1.2"
               />
-              <path d="M22 44 C28 42 36 44 44 52" fill="none" stroke="#e879f9" strokeWidth="1" opacity="0.8" />
+              <path d="M4 42 C7 36 12 36 18 48" fill="none" stroke="#e879f9" strokeWidth="1" opacity="0.8" />
             </g>
-            <g className="animate-wing-flutter" style={{ animationDelay: '0.12s', transformOrigin: '15% 60%' }}>
+            <g className="animate-wing-flutter" style={{ animationDelay: '0.12s', transformOrigin: '84px 52px' }}>
               <path
-                d="M52 50 C62 34 78 34 84 46 C88 55 80 66 66 68 C58 69 53 64 52 57 Z"
+                d="M84 52 C92 36 99 31 98 42 C97 51 93 60 81 64 C76 66 73 62 75 57 C77 54 83 54 84 52 Z"
                 fill="rgba(232, 121, 249, 0.7)"
                 stroke="#c026d3"
                 strokeWidth="1.2"
               />
-              <path d="M78 44 C72 42 64 44 56 52" fill="none" stroke="#e879f9" strokeWidth="1" opacity="0.8" />
+              <path d="M96 42 C93 36 88 36 82 48" fill="none" stroke="#e879f9" strokeWidth="1" opacity="0.8" />
             </g>
           </g>
         )}
@@ -363,6 +322,24 @@ export default function Mascot({
             <path d="M54 9 C57 0 56 -6 52 -9 C49 -6 49 0 50 9 Z" fill={p.feet} stroke={p.outline} strokeWidth="1" strokeLinejoin="round" />
           </g>
         )}
+        {skinDef.accessory === 'star' && (
+          <g transform="translate(50 4)" aria-hidden="true">
+            <path
+              className="mascot-sparkle"
+              d="M0 -6 L1.8 -1.8 L6 0 L1.8 1.8 L0 6 L-1.8 1.8 L-6 0 L-1.8 -1.8 Z"
+              fill={p.blush}
+              stroke={p.outline}
+              strokeWidth="1.1"
+            />
+          </g>
+        )}
+        {skinDef.accessory === 'spikes' && (
+          <g aria-hidden="true">
+            <path d="M37 9 L40 -4 L46 6 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M45 5 L50 -6 L55 5 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M54 6 L60 -4 L63 9 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+          </g>
+        )}
 
         {/* Nub arms (behind the body edge) */}
         <ellipse cx="16" cy="68" rx="5.5" ry="8.5" fill={bodyGradient} stroke={p.outline} strokeWidth="1.6" transform="rotate(24 16 68)" />
@@ -391,6 +368,48 @@ export default function Mascot({
           {/* Soft belly */}
           <ellipse cx="50" cy="64" rx="23" ry="17" fill={p.belly} opacity="0.22" aria-hidden="true" />
         </g>
+
+        {/* Screen-space burst ring on completion — in front of the body so it's always visible */}
+        {celebrate && (
+          <ellipse
+            className="animate-ring-pulse"
+            cx="50"
+            cy="92"
+            rx="14"
+            ry="4.5"
+            fill="none"
+            stroke="#a78bfa"
+            strokeWidth="3"
+          />
+        )}
+
+        {/* Level-up gold burst */}
+        {levelUp && (
+          <g aria-hidden="true">
+            <ellipse
+              className="animate-ring-pulse"
+              cx="50"
+              cy="92"
+              rx="14"
+              ry="4.5"
+              fill="none"
+              stroke="#fbbf24"
+              strokeWidth="3.5"
+            />
+            <g transform="translate(18, 18) scale(1.3)">
+              <path className="mascot-sparkle" d="M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z" fill="#fbbf24" />
+            </g>
+            <g transform="translate(84, 26) scale(1)">
+              <path className="mascot-sparkle" d="M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z" fill="#f472b6" style={{ animationDelay: '0.15s' }} />
+            </g>
+            <g transform="translate(72, 6) scale(0.9)">
+              <path className="mascot-sparkle" d="M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z" fill="#34d399" style={{ animationDelay: '0.3s' }} />
+            </g>
+          </g>
+        )}
+
+        {/* Sigh puff on un-check — beside the body edge */}
+        {sighing && <circle className="animate-puff-rise" cx="13" cy="42" r="4.2" fill="#cbd5e1" />}
 
         {/* Feet */}
         <ellipse cx="33" cy="93" rx="10" ry="5" fill={p.feet} opacity="0.9" />

@@ -2,8 +2,8 @@
  * Zico's Friends — the mascot roster.
  *
  * Every character is a squishy blob in the same style as Zico, but each has
- * its own palette, a native accessory and (for some) a different body shape,
- * so friends really do look different from each other.
+ * its own palette, headdress and (for many) a different body shape, so
+ * friends really do look different from each other.
  *
  * Friends are locked behind real effort — each one has a challenge to earn:
  * completed tasks, long streaks, perfect days, saved coins, even a single
@@ -16,7 +16,8 @@ export type MascotUnlock =
   | { type: 'streak'; goal: number }
   | { type: 'perfect-days'; goal: number }
   | { type: 'coins'; goal: number }
-  | { type: 'best-day'; goal: number };
+  | { type: 'best-day'; goal: number }
+  | { type: 'tracked'; goal: number };
 
 /**
  * Silhouette of the body. Every shape shares the same "dressing window"
@@ -24,7 +25,7 @@ export type MascotUnlock =
  * Zico's gear — hats, crown, cape, pets — fits every friend, and every
  * expression, reaction and animation works on every shape.
  */
-export type MascotShape = 'blob' | 'tall' | 'gumdrop' | 'block' | 'heart';
+export type MascotShape = 'blob' | 'tall' | 'gumdrop' | 'block' | 'heart' | 'egg';
 
 export type MascotAccessory =
   | 'none'
@@ -38,7 +39,9 @@ export type MascotAccessory =
   | 'sun-rays'
   | 'moon-disc'
   | 'atef'
-  | 'plume';
+  | 'plume'
+  | 'star'
+  | 'spikes';
 
 export interface MascotDef {
   id: string;
@@ -79,9 +82,9 @@ export const MASCOTS: MascotDef[] = [
   },
   {
     id: 'bastet',
-    name: 'Bastet',
+    name: 'Zizi',
     emoji: '🌸',
-    tagline: 'The cat goddess — pink and purrfect.',
+    tagline: 'Pink, sweet, and dangerously cute.',
     palette: {
       from: '#f9a8d4',
       to: '#ec4899',
@@ -96,9 +99,9 @@ export const MASCOTS: MascotDef[] = [
   },
   {
     id: 'khnum',
-    name: 'Khnum',
+    name: 'Chiko',
     emoji: '🐏',
-    tagline: 'The ram-headed potter of the Nile.',
+    tagline: 'Tough ram vibes, golden horns.',
     palette: {
       from: '#fcd34d',
       to: '#b45309',
@@ -113,9 +116,9 @@ export const MASCOTS: MascotDef[] = [
   },
   {
     id: 'sobek',
-    name: 'Sobek',
+    name: 'Tito',
     emoji: '🐊',
-    tagline: 'Crocodile of the waters — fearsome friend.',
+    tagline: "Croc-smile energy — don't poke him.",
     palette: {
       from: '#86efac',
       to: '#22c55e',
@@ -130,9 +133,9 @@ export const MASCOTS: MascotDef[] = [
   },
   {
     id: 'seth',
-    name: 'Seth',
+    name: 'Mido',
     emoji: '🌩️',
-    tagline: 'Storm god — a jittery ball of energy.',
+    tagline: 'A jittery ball of pure electricity.',
     palette: {
       from: '#fde047',
       to: '#f59e0b',
@@ -147,9 +150,9 @@ export const MASCOTS: MascotDef[] = [
   },
   {
     id: 'anubis',
-    name: 'Anubis',
+    name: 'Bondok',
     emoji: '🐺',
-    tagline: 'Jackal-headed guardian — tall and loyal.',
+    tagline: 'Tall, dark, loyal — a proper guard dog.',
     palette: {
       from: '#94a3b8',
       to: '#334155',
@@ -164,9 +167,9 @@ export const MASCOTS: MascotDef[] = [
   },
   {
     id: 'horus',
-    name: 'Horus',
+    name: 'Kimo',
     emoji: '🦅',
-    tagline: 'Falcon of the sky — sharp eyes, sharper beak.',
+    tagline: "Sharp eyes, sharper beak — the sky's his.",
     palette: {
       from: '#7dd3fc',
       to: '#2563eb',
@@ -181,9 +184,9 @@ export const MASCOTS: MascotDef[] = [
   },
   {
     id: 'bes',
-    name: 'Bes',
+    name: 'Semsem',
     emoji: '🦁',
-    tagline: 'The lion dwarf — small, wide and mighty.',
+    tagline: 'Small, wide and mighty — cuddle at your own risk.',
     palette: {
       from: '#fcd34d',
       to: '#ea580c',
@@ -198,7 +201,7 @@ export const MASCOTS: MascotDef[] = [
   },
   {
     id: 'ra',
-    name: 'Ra',
+    name: 'Body',
     emoji: '☀️',
     tagline: 'The sun himself — round and radiant.',
     palette: {
@@ -215,9 +218,9 @@ export const MASCOTS: MascotDef[] = [
   },
   {
     id: 'isis',
-    name: 'Isis',
+    name: 'Tota',
     emoji: '🌙',
-    tagline: 'The great enchantress — a heart of pure magic.',
+    tagline: 'A heart of pure magic — soft but fierce.',
     palette: {
       from: '#5eead4',
       to: '#0d9488',
@@ -232,9 +235,9 @@ export const MASCOTS: MascotDef[] = [
   },
   {
     id: 'ptah',
-    name: 'Ptah',
+    name: 'Simo',
     emoji: '🛠️',
-    tagline: 'Master craftsman — solid as a block of stone.',
+    tagline: 'Solid as a block of stone, built to last.',
     palette: {
       from: '#94a3b8',
       to: '#475569',
@@ -249,9 +252,9 @@ export const MASCOTS: MascotDef[] = [
   },
   {
     id: 'neith',
-    name: 'Neith',
+    name: 'Fifi',
     emoji: '🎯',
-    tagline: 'Goddess of the hunt — sharp, patient, unmissable.',
+    tagline: 'Sharp, patient, unmissable — the huntress.',
     palette: {
       from: '#67e8f9',
       to: '#0891b2',
@@ -264,6 +267,40 @@ export const MASCOTS: MascotDef[] = [
     shape: 'gumdrop',
     unlock: { type: 'best-day', goal: 40 },
   },
+  {
+    id: 'zizo',
+    name: 'Zizo',
+    emoji: '⭐',
+    tagline: 'The star of the party — always shining.',
+    palette: {
+      from: '#f0abfc',
+      to: '#c026d3',
+      outline: '#701a75',
+      feet: '#a21caf',
+      belly: '#fdf4ff',
+      blush: '#f0abfc',
+    },
+    accessory: 'star',
+    shape: 'blob',
+    unlock: { type: 'tracked', goal: 30 },
+  },
+  {
+    id: 'joe',
+    name: 'Joe',
+    emoji: '🕶️',
+    tagline: "Cool hair, cool vibes — the smoothest friend.",
+    palette: {
+      from: '#818cf8',
+      to: '#4338ca',
+      outline: '#312e81',
+      feet: '#3730a3',
+      belly: '#eef2ff',
+      blush: '#818cf8',
+    },
+    accessory: 'spikes',
+    shape: 'egg',
+    unlock: { type: 'streak', goal: 30 },
+  },
 ];
 
 export const getMascot = (id: string): MascotDef =>
@@ -275,6 +312,7 @@ export interface MascotMetrics {
   perfectDays: number;
   coins: number;
   bestDay: number;
+  tracked: number;
 }
 
 /** Current progress toward a friend's unlock (0-1). */
@@ -290,7 +328,9 @@ export const getMascotProgress = (mascot: MascotDef, metrics: MascotMetrics): nu
           ? metrics.perfectDays
           : u.type === 'coins'
             ? metrics.coins
-            : metrics.bestDay;
+            : u.type === 'best-day'
+              ? metrics.bestDay
+              : metrics.tracked;
   return Math.min(1, value / u.goal);
 };
 
@@ -313,5 +353,7 @@ export const unlockLabel = (unlock: MascotUnlock | null): string => {
       return `Save up ${unlock.goal} coins`;
     case 'best-day':
       return `Complete ${unlock.goal} tasks in one day`;
+    case 'tracked':
+      return `Track ${unlock.goal} days`;
   }
 };
