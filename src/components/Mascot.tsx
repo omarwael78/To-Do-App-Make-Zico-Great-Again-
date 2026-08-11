@@ -51,6 +51,17 @@ export default function Mascot({
   const skinDef = getMascot(skin);
   const p = skinDef.palette;
   const bodyGradient = `url(#mascot-body-${skinDef.id})`;
+
+  // Subtle silhouette differences per friend (scaled around the head so
+  // hats and crowns still sit right).
+  const bodyShape =
+    skinDef.shape === 'tall'
+      ? 'translate(50 18) scale(0.94 1.05) translate(-50 -18)'
+      : skinDef.shape === 'wide'
+        ? 'translate(50 18) scale(1.1 0.94) translate(-50 -18)'
+        : skinDef.shape === 'round'
+          ? 'translate(50 18) scale(1.06 1.05) translate(-50 -18)'
+          : undefined;
   const [waving, setWaving] = useState(false);
 
   useEffect(() => {
@@ -278,17 +289,17 @@ export default function Mascot({
             <path d="M69 11 L74 2 L64 7 Z" fill={p.blush} opacity="0.9" />
           </g>
         )}
-        {skinDef.accessory === 'horns' && (
+        {skinDef.accessory === 'ram-horns' && (
           <g aria-hidden="true">
-            <path d="M34 10 Q27 0 22 -4 Q29 -3 37 4 Q36 8 34 10 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.4" strokeLinejoin="round" />
-            <path d="M66 10 Q73 0 78 -4 Q71 -3 63 4 Q64 8 66 10 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.4" strokeLinejoin="round" />
+            <path d="M35 10 C26 5 19 -3 25 -7 C31 -11 38 -4 36 2 C35 6 36 9 35 10 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.4" strokeLinejoin="round" />
+            <path d="M65 10 C74 5 81 -3 75 -7 C69 -11 62 -4 64 2 C65 6 64 9 65 10 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.4" strokeLinejoin="round" />
           </g>
         )}
-        {skinDef.accessory === 'dino' && (
+        {skinDef.accessory === 'croc' && (
           <g aria-hidden="true">
-            <path d="M37 9 L42 -3 L47 8 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
-            <path d="M46 6 L50 -4 L54 6 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
-            <path d="M55 7 L60 -3 L64 8 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M36 9 L41 -4 L46 8 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M45 6 L50 -5 L55 6 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M54 8 L59 -4 L64 9 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
           </g>
         )}
         {skinDef.accessory === 'antenna' && (
@@ -297,32 +308,68 @@ export default function Mascot({
             <circle cx="50" cy="3" r="3.2" fill={p.blush} stroke={p.outline} strokeWidth="1.4" />
           </g>
         )}
+        {skinDef.accessory === 'dog-ears' && (
+          <g aria-hidden="true">
+            <path d="M31 12 L24 -5 L38 5 Z" fill={bodyGradient} stroke={p.outline} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M69 12 L76 -5 L62 5 Z" fill={bodyGradient} stroke={p.outline} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M30 10 L27 0 L35 5 Z" fill={p.feet} opacity="0.9" />
+            <path d="M70 10 L73 0 L65 5 Z" fill={p.feet} opacity="0.9" />
+          </g>
+        )}
+        {skinDef.accessory === 'beak' && (
+          <g aria-hidden="true">
+            <path d="M42 9 L39 -1 L46 5 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M50 7 L47 -3 L53 3 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M58 9 L61 -1 L54 5 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+          </g>
+        )}
+        {skinDef.accessory === 'mane' && (
+          <g aria-hidden="true">
+            <circle cx="27" cy="19" r="6.5" fill={p.feet} stroke={p.outline} strokeWidth="1.4" />
+            <circle cx="39" cy="7" r="6.5" fill={p.feet} stroke={p.outline} strokeWidth="1.4" />
+            <circle cx="61" cy="7" r="6.5" fill={p.feet} stroke={p.outline} strokeWidth="1.4" />
+            <circle cx="73" cy="19" r="6.5" fill={p.feet} stroke={p.outline} strokeWidth="1.4" />
+            <circle cx="22" cy="34" r="6" fill={p.feet} stroke={p.outline} strokeWidth="1.4" />
+            <circle cx="78" cy="34" r="6" fill={p.feet} stroke={p.outline} strokeWidth="1.4" />
+          </g>
+        )}
+        {skinDef.accessory === 'sun-rays' && (
+          <g aria-hidden="true">
+            <path d="M46 7 L50 -4 L54 7 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M38 10 L32 -1 L43 5 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M62 10 L68 -1 L57 5 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M30 19 L22 10 L34 14 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M70 19 L78 10 L66 14 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+          </g>
+        )}
 
         {/* Nub arms (behind the body edge) */}
         <ellipse cx="16" cy="68" rx="5.5" ry="8.5" fill={bodyGradient} stroke={p.outline} strokeWidth="1.6" transform="rotate(24 16 68)" />
         <ellipse cx="84" cy="68" rx="5.5" ry="8.5" fill={bodyGradient} stroke={p.outline} strokeWidth="1.6" transform="rotate(-24 84 68)" />
 
-        {/* Body */}
-        <path
-          d="M50 5 C66 4 82 8 90 22 C97 35 95 52 89 64 C83 77 73 88 60 92 C47 96 34 94 24 86 C13 78 7 64 6 49 C5 34 12 20 23 12 C32 6 42 5 50 5 Z"
-          fill={bodyGradient}
-          stroke={p.outline}
-          strokeWidth="2.2"
-          strokeLinejoin="round"
-        />
-        {/* Glossy highlight (top-left light) */}
-        <ellipse
-          cx="36"
-          cy="29"
-          rx="13"
-          ry="7.5"
-          fill="#ffffff"
-          opacity="0.28"
-          transform="rotate(-18 36 29)"
-          aria-hidden="true"
-        />
-        {/* Soft belly */}
-        <ellipse cx="50" cy="64" rx="23" ry="17" fill={p.belly} opacity="0.22" aria-hidden="true" />
+        {/* Body (optionally reshaped per friend) */}
+        <g transform={bodyShape}>
+          <path
+            d="M50 5 C66 4 82 8 90 22 C97 35 95 52 89 64 C83 77 73 88 60 92 C47 96 34 94 24 86 C13 78 7 64 6 49 C5 34 12 20 23 12 C32 6 42 5 50 5 Z"
+            fill={bodyGradient}
+            stroke={p.outline}
+            strokeWidth="2.2"
+            strokeLinejoin="round"
+          />
+          {/* Glossy highlight (top-left light) */}
+          <ellipse
+            cx="36"
+            cy="29"
+            rx="13"
+            ry="7.5"
+            fill="#ffffff"
+            opacity="0.28"
+            transform="rotate(-18 36 29)"
+            aria-hidden="true"
+          />
+          {/* Soft belly */}
+          <ellipse cx="50" cy="64" rx="23" ry="17" fill={p.belly} opacity="0.22" aria-hidden="true" />
+        </g>
 
         {/* Feet */}
         <ellipse cx="33" cy="93" rx="10" ry="5" fill={p.feet} opacity="0.9" />
@@ -470,6 +517,22 @@ export default function Mascot({
           <g aria-hidden="true">
             <circle cx="84" cy="30" r="2.3" fill="#60a5fa" className="animate-sweat-drop" />
             <circle cx="88" cy="38" r="2" fill="#93c5fd" className="animate-sweat-drop" style={{ animationDelay: '0.8s' }} />
+          </g>
+        )}
+
+        {/* Jackal muzzle (Anubis) — sits under the mouth */}
+        {skinDef.accessory === 'dog-ears' && (
+          <g aria-hidden="true">
+            <path d="M38 53 Q50 48 62 53 Q64 61 50 65 Q36 61 38 53 Z" fill={p.feet} opacity="0.5" />
+            <ellipse cx="50" cy="53" rx="3.2" ry="2.3" fill={p.outline} />
+          </g>
+        )}
+
+        {/* Falcon beak (Horus) — over the face, before the mouth */}
+        {skinDef.accessory === 'beak' && (
+          <g aria-hidden="true">
+            <path d="M44 58 Q50 53 56 58 Q54 64 50 64 Q46 64 44 58 Z" fill="#fbbf24" stroke="#b45309" strokeWidth="1.4" />
+            <path d="M50 54 L48 56.5 L52 56.5 Z" fill="#92400e" />
           </g>
         )}
 

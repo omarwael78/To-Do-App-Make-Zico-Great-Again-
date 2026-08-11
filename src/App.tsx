@@ -100,8 +100,9 @@ export default function App() {
       streak: stats.bestStreak,
       perfectDays: stats.perfectDays,
       coins: wardrobe.coins,
+      bestDay: stats.bestDay,
     }),
-    [stats.doneAllTime, stats.bestStreak, stats.perfectDays, wardrobe.coins]
+    [stats.doneAllTime, stats.bestStreak, stats.perfectDays, stats.bestDay, wardrobe.coins]
   );
 
   /* ---------- mascot mood & reactions ---------- */

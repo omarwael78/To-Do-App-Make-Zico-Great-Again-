@@ -13,14 +13,8 @@ import {
   getMascotProgress,
   isMascotUnlocked,
   unlockLabel,
+  type MascotMetrics,
 } from '@/data/mascots';
-
-interface MascotMetrics {
-  tasks: number;
-  streak: number;
-  perfectDays: number;
-  coins: number;
-}
 
 interface WardrobeModalProps {
   open: boolean;
@@ -300,7 +294,7 @@ export default function WardrobeModal({
             [
               { id: 'streak', label: '⭐ Streak gear' },
               { id: 'shop', label: '🛒 Shop' },
-              { id: 'mascots', label: '🎭 Mascots' },
+              { id: 'mascots', label: '🎭 Zico\'s Friends' },
             ] as const
           ).map((t) => (
             <button
@@ -321,7 +315,12 @@ export default function WardrobeModal({
         {/* Item list */}
         <div className="max-h-[46vh] flex-1 overflow-y-auto p-5">
           {tab === 'mascots' ? (
-            <div className="grid grid-cols-2 gap-3">
+            <div>
+              <p className="mb-3 text-[11px] font-medium leading-relaxed text-slate-400 dark:text-slate-500">
+                Every friend has a challenge — earn it and they'll join your crew. All your
+                gear works on any of them.
+              </p>
+              <div className="grid grid-cols-2 gap-3">
               {MASCOTS.map((m) => {
                 const unlocked = isMascotUnlocked(m, mascotMetrics);
                 const progress = getMascotProgress(m, mascotMetrics);
@@ -389,6 +388,7 @@ export default function WardrobeModal({
                   </div>
                 );
               })}
+              </div>
             </div>
           ) : tab === 'streak' ? (
             <ul className="space-y-2">

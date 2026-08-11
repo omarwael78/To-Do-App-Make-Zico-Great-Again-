@@ -451,6 +451,13 @@ export function useTaskData() {
       (d) => d.tasks.length > 0 && d.tasks.every((t) => t.completed)
     ).length;
 
+    // Most tasks completed in a single day (history + today).
+    const bestDay = Math.max(
+      0,
+      ...history.map((d) => d.tasks.filter((t) => t.completed).length),
+      tasks.filter((t) => t.completed).length
+    );
+
     return {
       daysTracked: history.length,
       doneAllTime,
@@ -459,6 +466,7 @@ export function useTaskData() {
       streak,
       bestStreak,
       perfectDays,
+      bestDay,
     };
   }, [history, tasks, streak]);
 

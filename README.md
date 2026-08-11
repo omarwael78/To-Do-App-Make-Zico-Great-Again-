@@ -72,23 +72,28 @@ no accounts, no backend, no tracking — your data lives in your own browser.
   happy for "all caught up", sad for "nothing completed yet"
 - **Header logo** — the app logo is a live mini version of your active mascot
 
-### 🎭 Mascot characters
-Zico isn't alone! The **Mascots tab** of the wardrobe lets you play as other
-squishy blobs — each with its own palette and native accessory (cat ears,
-horns, dino spikes, antenna). All gear works on every character. They unlock
-through real effort, and a toast celebrates the moment one becomes available:
+### 🎭 Zico's Friends
+Zico isn't alone! The **Zico's Friends tab** of the wardrobe lets you play as
+his whole crew — squishy blobs with their own palettes, and several with truly
+different silhouettes (tall jackal, wide lion, round sun, beaked falcon).
+All gear works on every character. Each friend has a **challenge** to earn,
+and a toast celebrates the moment one becomes available:
 
-| Character | Look | Unlock |
+| Friend | Look | Challenge |
 |---|---|---|
 | **Zico** 💜 | Violet blob | Available from the start |
-| **Luna** 🌸 | Pink with cat ears | Complete **100 tasks** |
-| **Blaze** 🔥 | Orange devil with horns | Reach a **14-day** best streak |
-| **Sprout** 🌱 | Green dino with back spikes | Earn **10 perfect days** |
-| **Zap** ⚡ | Yellow ball with antenna | Save up **250 coins** |
+| **Bastet** 🌸 | Pink with cat ears | Complete **100 tasks** |
+| **Khnum** 🐏 | Amber with ram horns | Reach a **14-day** best streak |
+| **Sobek** 🐊 | Green with croc spikes | Earn **10 perfect days** |
+| **Seth** 🌩️ | Yellow with lightning antenna | Save up **250 coins** |
+| **Anubis** 🐺 | Charcoal jackal — tall, ears + muzzle | Complete **30 tasks in one day** |
+| **Horus** 🦅 | Sky-blue falcon with beak + crest | Reach a **25-day** best streak |
+| **Bes** 🦁 | Golden lion — wide, with a mane | Save up **500 coins** |
+| **Ra** ☀️ | Red sun with rays | Complete **300 tasks** |
 
-Locked characters show their progress bar in the modal; unlocked ones can be
-selected anytime, and the whole app (header, banner, track, empty state,
-dressing room) follows your pick.
+Locked friends show their challenge progress bar in the modal; unlocked ones
+can be selected anytime, and the whole app (header, banner, track, empty
+state, dressing room) follows your pick.
 
 ### Zico's gadget wardrobe 🎁
 Zico's **wardrobe** has two kinds of gear — streak items unlocked by staying
@@ -250,7 +255,7 @@ src/
 ├── data/
 │   ├── taskflow.json        # project data file (your defaults)
 │   ├── wardrobe.ts          # gadget catalog: streak gear + coin shop items
-│   └── mascots.ts           # mascot roster: palettes, accessories, unlock rules
+│   └── mascots.ts           # Zico's Friends: palettes, shapes, accessories, challenges
 ├── types/task.ts             # shared TypeScript types
 ├── hooks/
 │   ├── useLocalStorage.ts    # persisted state + cross-tab sync
