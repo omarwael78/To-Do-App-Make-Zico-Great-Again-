@@ -1,6 +1,6 @@
 import TaskItem from '@/components/TaskItem';
 import EmptyState from '@/components/EmptyState';
-import { Task, FilterType } from '@/types/task';
+import { Task, FilterType, Mood } from '@/types/task';
 
 interface TaskListProps {
   tasks: Task[];
@@ -8,6 +8,8 @@ interface TaskListProps {
   onDelete: (task: Task) => void;
   onUpdate: (id: string, text: string) => void;
   filter: FilterType;
+  mood: Mood;
+  equipped: string[];
   onShowAll: () => void;
 }
 
@@ -17,10 +19,12 @@ export default function TaskList({
   onDelete,
   onUpdate,
   filter,
+  mood,
+  equipped,
   onShowAll,
 }: TaskListProps) {
   if (tasks.length === 0) {
-    return <EmptyState filter={filter} onShowAll={onShowAll} />;
+    return <EmptyState filter={filter} mood={mood} equipped={equipped} onShowAll={onShowAll} />;
   }
 
   return (

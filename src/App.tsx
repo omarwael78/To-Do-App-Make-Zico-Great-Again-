@@ -510,6 +510,8 @@ export default function App() {
                 onDelete={handleDelete}
                 onUpdate={updateTask}
                 filter={filter}
+                mood={mood}
+                equipped={wardrobe.equipped}
                 onShowAll={() => setFilter('all')}
               />
             </div>
