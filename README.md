@@ -40,6 +40,8 @@ no accounts, no backend, no tracking — your data lives in your own browser.
 ### Mascot — Zico 🤖
 - A cute animated blob character that walks a **progress track** through your day —
   the more tasks you complete, the further Zico walks toward the 🚩 finish line
+- **New look** — glossy gradient body with a soft outline, belly patch, nub arms,
+  and a face that reacts to everything; gear (hats, capes, pets…) sits right on him
 - **Expressive face** — Zico never fakes it:
   - **Idle**: with an empty list he cycles through neutral, **bored** ("...")
     and **sleepy** ("z z z") faces instead of forcing a smile
@@ -68,6 +70,25 @@ no accounts, no backend, no tracking — your data lives in your own browser.
 - **Mini Zico in the empty state** — when the list is empty, Zico himself
   (wearing your gear) floats there, matching the filter: neutral for "all",
   happy for "all caught up", sad for "nothing completed yet"
+- **Header logo** — the app logo is a live mini version of your active mascot
+
+### 🎭 Mascot characters
+Zico isn't alone! The **Mascots tab** of the wardrobe lets you play as other
+squishy blobs — each with its own palette and native accessory (cat ears,
+horns, dino spikes, antenna). All gear works on every character. They unlock
+through real effort, and a toast celebrates the moment one becomes available:
+
+| Character | Look | Unlock |
+|---|---|---|
+| **Zico** 💜 | Violet blob | Available from the start |
+| **Luna** 🌸 | Pink with cat ears | Complete **100 tasks** |
+| **Blaze** 🔥 | Orange devil with horns | Reach a **14-day** best streak |
+| **Sprout** 🌱 | Green dino with back spikes | Earn **10 perfect days** |
+| **Zap** ⚡ | Yellow ball with antenna | Save up **250 coins** |
+
+Locked characters show their progress bar in the modal; unlocked ones can be
+selected anytime, and the whole app (header, banner, track, empty state,
+dressing room) follows your pick.
 
 ### Zico's gadget wardrobe 🎁
 Zico's **wardrobe** has two kinds of gear — streak items unlocked by staying
@@ -228,14 +249,15 @@ After editing, hit **"Reset to project defaults"** in the footer to reload from 
 src/
 ├── data/
 │   ├── taskflow.json        # project data file (your defaults)
-│   └── wardrobe.ts          # gadget catalog: streak gear + coin shop items
+│   ├── wardrobe.ts          # gadget catalog: streak gear + coin shop items
+│   └── mascots.ts           # mascot roster: palettes, accessories, unlock rules
 ├── types/task.ts             # shared TypeScript types
 ├── hooks/
 │   ├── useLocalStorage.ts    # persisted state + cross-tab sync
 │   ├── useTheme.ts           # dark/light mode
 │   ├── useToasts.ts          # toast notifications
 │   ├── useTaskData.ts        # tasks, history, suggestions, streak, daily rollover, backup
-│   ├── useWardrobe.ts        # coins, owned & equipped items, shop purchases
+│   ├── useWardrobe.ts        # coins, owned & equipped items, shop purchases, mascot
 │   └── useSounds.ts          # WebAudio sound effects + mute preference
 ├── utils/
 │   ├── cn.ts                 # Tailwind class merging
