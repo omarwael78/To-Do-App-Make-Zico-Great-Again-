@@ -1,4 +1,5 @@
 import ThemeToggle from './ThemeToggle';
+import Mascot from './Mascot';
 import { Theme } from '@/types/task';
 import { getGreeting } from '@/utils/date';
 
@@ -9,6 +10,7 @@ interface HeaderProps {
   coins: number;
   muted: boolean;
   onToggleSound: () => void;
+  mascot: string;
 }
 
 export default function Header({
@@ -18,6 +20,7 @@ export default function Header({
   coins,
   muted,
   onToggleSound,
+  mascot,
 }: HeaderProps) {
   const dayLabel = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
@@ -29,14 +32,11 @@ export default function Header({
     <header className="mb-6">
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          {/* Logo */}
+          {/* Logo — the active mascot */}
           <div className="relative shrink-0">
             <div className="absolute inset-0 rounded-2xl bg-violet-500 opacity-40 blur-lg" aria-hidden="true" />
-            <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 via-indigo-500 to-indigo-600 shadow-lg shadow-violet-500/40">
-              <svg className="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="9 11 12 14 22 4" />
-                <path d="M21 12v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-              </svg>
+            <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 via-indigo-500 to-indigo-600 shadow-lg shadow-violet-500/40">
+              <Mascot mood="happy" skin={mascot} size={42} />
             </div>
           </div>
 

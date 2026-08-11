@@ -10,6 +10,7 @@ interface TaskListProps {
   filter: FilterType;
   mood: Mood;
   equipped: string[];
+  skin: string;
   onShowAll: () => void;
 }
 
@@ -21,10 +22,19 @@ export default function TaskList({
   filter,
   mood,
   equipped,
+  skin,
   onShowAll,
 }: TaskListProps) {
   if (tasks.length === 0) {
-    return <EmptyState filter={filter} mood={mood} equipped={equipped} onShowAll={onShowAll} />;
+    return (
+      <EmptyState
+        filter={filter}
+        mood={mood}
+        equipped={equipped}
+        skin={skin}
+        onShowAll={onShowAll}
+      />
+    );
   }
 
   return (

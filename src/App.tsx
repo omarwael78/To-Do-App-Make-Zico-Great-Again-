@@ -18,6 +18,7 @@ import { useToasts } from '@/hooks/useToasts';
 import { useWardrobe } from '@/hooks/useWardrobe';
 import { useSounds } from '@/hooks/useSounds';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { MASCOTS, getMascot, isMascotUnlocked } from '@/data/mascots';
 import { STREAK_GADGETS, gadgetById } from '@/data/wardrobe';
 import { getDateString } from '@/utils/date';
 import { FilterType, ViewType, Task, Mood, Reaction } from '@/types/task';
@@ -90,6 +91,17 @@ export default function App() {
         return true;
       }),
     [tasks, filter]
+  );
+
+  /** Effort metrics used to unlock mascot characters. */
+  const mascotMetrics = useMemo(
+    () => ({
+      tasks: stats.doneAllTime,
+      streak: stats.bestStreak,
+      perfectDays: stats.perfectDays,
+      coins: wardrobe.coins,
+    }),
+    [stats.doneAllTime, stats.bestStreak, stats.perfectDays, wardrobe.coins]
   );
 
   /* ---------- mascot mood & reactions ---------- */
@@ -202,6 +214,25 @@ export default function App() {
     }
   }, [wardrobe.coins, sounds, notify]);
 
+  // Cheer the moment a new mascot character becomes unlocked
+  const unlockedMascotsRef = useRef<Set<string> | null>(null);
+  useEffect(() => {
+    const unlockedNow = new Set(
+      MASCOTS.filter((m) => isMascotUnlocked(m, mascotMetrics)).map((m) => m.id)
+    );
+    if (unlockedMascotsRef.current === null) {
+      unlockedMascotsRef.current = unlockedNow;
+      return;
+    }
+    for (const m of MASCOTS) {
+      if (m.unlock && unlockedNow.has(m.id) && !unlockedMascotsRef.current.has(m.id)) {
+        sounds.playLevelUp();
+        notify(`🎉 New mascot unlocked — ${m.emoji} ${m.name}!`, 'success');
+        unlockedMascotsRef.current.add(m.id);
+      }
+    }
+  }, [mascotMetrics, sounds, notify]);
+
   /* ---------- handlers with feedback ---------- */
   /** Completing a task earns 1 coin — Zico's shop currency. */
   const handleToggleTask = useCallback(
@@ -249,6 +280,23 @@ export default function App() {
       }
     },
     [wardrobe.toggleEquip, sounds, notify]
+  );
+
+  /** Switch the active mascot — locked characters can't be selected. */
+  const handleSelectMascot = useCallback(
+    (id: string) => {
+      if (id === wardrobe.mascot) return;
+      const def = getMascot(id);
+      if (!isMascotUnlocked(def, mascotMetrics)) {
+        sounds.playLocked();
+        notify(`${def.name} is still locked — keep going!`, 'info');
+        return;
+      }
+      wardrobe.setMascot(id);
+      sounds.playLevelUp();
+      notify(`Now playing as ${def.emoji} ${def.name}!`, 'success');
+    },
+    [wardrobe.mascot, wardrobe.setMascot, mascotMetrics, sounds, notify]
   );
 
   /** Buy from the shop — toasts the outcome. */
@@ -431,6 +479,7 @@ export default function App() {
           coins={wardrobe.coins}
           muted={sounds.muted}
           onToggleSound={() => sounds.setMuted(!sounds.muted)}
+          mascot={wardrobe.mascot}
         />
 
         <ViewSwitcher current={view} onChange={setView} historyCount={history.length} />
@@ -450,6 +499,7 @@ export default function App() {
                 coins={wardrobe.coins}
                 owned={wardrobe.owned}
                 equipped={wardrobe.equipped}
+                skin={wardrobe.mascot}
                 coinFx={coinFx}
                 chestAvailable={chestAvailable}
                 onOpenChest={handleOpenChest}
@@ -512,6 +562,7 @@ export default function App() {
                 filter={filter}
                 mood={mood}
                 equipped={wardrobe.equipped}
+                skin={wardrobe.mascot}
                 onShowAll={() => setFilter('all')}
               />
             </div>
@@ -536,9 +587,12 @@ export default function App() {
         owned={wardrobe.owned}
         equipped={wardrobe.equipped}
         streak={streak}
+        mascot={wardrobe.mascot}
+        mascotMetrics={mascotMetrics}
         onBuy={handleBuy}
         onToggle={handleToggleEquip}
         onWearAll={(wear) => wardrobe.setAllOwned(wear)}
+        onSelectMascot={handleSelectMascot}
       />
       <ToastStack toasts={toasts} onDismiss={dismiss} />
     </div>

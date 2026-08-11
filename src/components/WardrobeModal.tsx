@@ -8,6 +8,19 @@ import {
   type Gadget,
   type GadgetCategory,
 } from '@/data/wardrobe';
+import {
+  MASCOTS,
+  getMascotProgress,
+  isMascotUnlocked,
+  unlockLabel,
+} from '@/data/mascots';
+
+interface MascotMetrics {
+  tasks: number;
+  streak: number;
+  perfectDays: number;
+  coins: number;
+}
 
 interface WardrobeModalProps {
   open: boolean;
@@ -16,10 +29,13 @@ interface WardrobeModalProps {
   owned: string[];
   equipped: string[];
   streak: number;
+  mascot: string;
+  mascotMetrics: MascotMetrics;
   /** Returns true when the purchase succeeded. */
   onBuy: (id: string) => boolean;
   onToggle: (id: string) => void;
   onWearAll: (wear: boolean) => void;
+  onSelectMascot: (id: string) => void;
 }
 
 const CATEGORY_LABEL: Record<GadgetCategory, string> = {
@@ -144,11 +160,14 @@ export default function WardrobeModal({
   owned,
   equipped,
   streak,
+  mascot,
+  mascotMetrics,
   onBuy,
   onToggle,
   onWearAll,
+  onSelectMascot,
 }: WardrobeModalProps) {
-  const [tab, setTab] = useState<'streak' | 'shop'>('streak');
+  const [tab, setTab] = useState<'streak' | 'shop' | 'mascots'>('streak');
 
   // Accessibility while open: lock body scroll, move focus in, trap Tab
   // inside the dialog, restore focus (and scrolling) when it closes.
@@ -264,13 +283,13 @@ export default function WardrobeModal({
 
         {/* Live preview */}
         <div className="flex items-center justify-center gap-4 border-b border-slate-100 bg-gradient-to-br from-violet-50 via-white to-amber-50 py-3 dark:border-slate-700/60 dark:from-slate-800/80 dark:via-slate-900 dark:to-amber-950/20">
-          <Mascot mood="happy" excitement={2} equipped={equipped} size={104} />
+          <Mascot mood="happy" excitement={2} equipped={equipped} skin={mascot} size={104} />
           <div className="max-w-[180px]">
             <p className="text-xs font-extrabold text-slate-700 dark:text-slate-200">
               Dressing room 👔
             </p>
             <p className="mt-0.5 text-[11px] font-medium leading-snug text-slate-400 dark:text-slate-500">
-              Every change below shows up on Zico instantly.
+              Every change below shows up on your mascot instantly.
             </p>
           </div>
         </div>
@@ -281,6 +300,7 @@ export default function WardrobeModal({
             [
               { id: 'streak', label: '⭐ Streak gear' },
               { id: 'shop', label: '🛒 Shop' },
+              { id: 'mascots', label: '🎭 Mascots' },
             ] as const
           ).map((t) => (
             <button
@@ -300,7 +320,77 @@ export default function WardrobeModal({
 
         {/* Item list */}
         <div className="max-h-[46vh] flex-1 overflow-y-auto p-5">
-          {tab === 'streak' ? (
+          {tab === 'mascots' ? (
+            <div className="grid grid-cols-2 gap-3">
+              {MASCOTS.map((m) => {
+                const unlocked = isMascotUnlocked(m, mascotMetrics);
+                const progress = getMascotProgress(m, mascotMetrics);
+                const isCurrent = m.id === mascot;
+                return (
+                  <div
+                    key={m.id}
+                    className={cn(
+                      'flex flex-col items-center rounded-2xl border p-4 text-center transition-colors',
+                      isCurrent
+                        ? 'border-violet-400 bg-violet-50 dark:border-violet-500/60 dark:bg-violet-500/10'
+                        : 'border-slate-100 bg-white/70 dark:border-slate-700/60 dark:bg-slate-800/50'
+                    )}
+                  >
+                    <div className={cn('relative', !unlocked && 'opacity-70 grayscale')}>
+                      <Mascot mood="happy" excitement={1} equipped={equipped} skin={m.id} size={72} />
+                      {!unlocked && (
+                        <span
+                          aria-hidden="true"
+                          className="absolute inset-0 flex items-center justify-center text-2xl drop-shadow"
+                        >
+                          🔒
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-2 flex flex-wrap items-center justify-center gap-1 text-sm font-extrabold text-slate-700 dark:text-slate-200">
+                      <span aria-hidden="true">{m.emoji}</span>
+                      {m.name}
+                      {isCurrent && (
+                        <span className="rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8px] font-extrabold uppercase tracking-wide text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
+                          active
+                        </span>
+                      )}
+                    </p>
+                    <p className="mt-0.5 min-h-[2rem] text-[10px] font-medium leading-snug text-slate-400 dark:text-slate-500">
+                      {m.tagline}
+                    </p>
+                    {unlocked ? (
+                      <button
+                        onClick={() => onSelectMascot(m.id)}
+                        disabled={isCurrent}
+                        className={cn(
+                          'mt-3 rounded-full px-3 py-1 text-[11px] font-extrabold transition-transform',
+                          isCurrent
+                            ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400'
+                            : 'bg-gradient-to-r from-violet-500 to-indigo-500 text-white shadow-sm hover:scale-105'
+                        )}
+                      >
+                        {isCurrent ? 'Playing as' : 'Select'}
+                      </button>
+                    ) : (
+                      <div className="mt-3 w-full">
+                        <div className="flex items-center justify-between gap-1 text-[9px] font-extrabold text-slate-400 dark:text-slate-500">
+                          <span className="truncate">{unlockLabel(m.unlock)}</span>
+                          <span className="shrink-0">{Math.round(progress * 100)}%</span>
+                        </div>
+                        <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
+                          <div
+                            className="h-full rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-500 transition-all duration-500"
+                            style={{ width: `${progress * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ) : tab === 'streak' ? (
             <ul className="space-y-2">
               {STREAK_GADGETS.map((g) => (
                 <ItemRow

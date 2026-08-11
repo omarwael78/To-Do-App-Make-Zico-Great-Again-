@@ -5,6 +5,7 @@ interface EmptyStateProps {
   filter: FilterType;
   mood: Mood;
   equipped: string[];
+  skin: string;
   onShowAll: () => void;
 }
 
@@ -33,6 +34,7 @@ export default function EmptyState({
   filter,
   mood,
   equipped,
+  skin,
   onShowAll,
 }: EmptyStateProps) {
   const { title, subtitle } = MESSAGES[filter];
@@ -41,7 +43,7 @@ export default function EmptyState({
   return (
     <div className="animate-fade-in flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white/40 py-12 text-center dark:border-slate-700 dark:bg-slate-800/30">
       <div className="animate-float mb-3" aria-hidden="true">
-        <Mascot mood={faceMood} excitement={0} equipped={equipped} size={64} />
+        <Mascot mood={faceMood} excitement={0} equipped={equipped} skin={skin} size={64} />
       </div>
       <h3 className="mb-1 text-base font-extrabold text-slate-600 dark:text-slate-300">
         {title}

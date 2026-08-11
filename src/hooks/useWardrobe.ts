@@ -5,6 +5,7 @@ import { STREAK_GADGETS, WARDROBE, type Gadget } from '@/data/wardrobe';
 const COINS_KEY = 'taskflow-coins';
 const OWNED_KEY = 'taskflow-wardrobe-owned';
 const EQUIPPED_KEY = 'taskflow-wardrobe-equipped';
+const MASCOT_KEY = 'taskflow-mascot';
 
 export interface ToggleResult {
   ok: boolean;
@@ -28,6 +29,7 @@ export function useWardrobe(streak: number) {
     // First run: wear everything the streak has unlocked so far.
     () => STREAK_GADGETS.filter((g) => streak >= (g.level ?? 0)).map((g) => g.id)
   );
+  const [mascot, setMascot] = useLocalStorage<string>(MASCOT_KEY, 'zico');
 
   // Keep streak gear in sync with the streak.
   useEffect(() => {
@@ -118,6 +120,8 @@ export function useWardrobe(streak: number) {
     coins,
     owned,
     equipped,
+    mascot,
+    setMascot,
     isOwned,
     isEquipped,
     addCoins,

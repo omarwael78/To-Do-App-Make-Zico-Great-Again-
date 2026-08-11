@@ -15,6 +15,8 @@ interface MascotBannerProps {
   coins: number;
   owned: string[];
   equipped: string[];
+  /** Active mascot skin id. */
+  skin: string;
   /** Non-null while a coin reward is animating (bump `id` to replay). */
   coinFx: { id: number; amount: number } | null;
   /** True until today's free chest has been opened. */
@@ -86,6 +88,7 @@ export default function MascotBanner({
   coins,
   owned,
   equipped,
+  skin,
   coinFx,
   chestAvailable,
   onOpenChest,
@@ -253,6 +256,7 @@ export default function MascotBanner({
               walking={total > 0}
               reaction={reaction}
               equipped={equipped}
+              skin={skin}
               size={62}
             />
           </div>

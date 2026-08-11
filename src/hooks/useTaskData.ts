@@ -446,6 +446,11 @@ export function useTaskData() {
       }
     }
 
+    // Perfect days: a day with a non-empty list where everything got done.
+    const perfectDays = history.filter(
+      (d) => d.tasks.length > 0 && d.tasks.every((t) => t.completed)
+    ).length;
+
     return {
       daysTracked: history.length,
       doneAllTime,
@@ -453,6 +458,7 @@ export function useTaskData() {
       avgRate: totalAllTime ? Math.round((doneAllTime / totalAllTime) * 100) : 0,
       streak,
       bestStreak,
+      perfectDays,
     };
   }, [history, tasks, streak]);
 
