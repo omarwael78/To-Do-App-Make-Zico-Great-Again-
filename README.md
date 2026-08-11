@@ -75,25 +75,29 @@ no accounts, no backend, no tracking — your data lives in your own browser.
 ### 🎭 Zico's Friends
 Zico isn't alone! The **Zico's Friends tab** of the wardrobe lets you play as
 his whole crew — each friend has its own palette, headdress and **body
-silhouette** (round blob, tall jackal, gumdrop, stone block, heart), yet every
-piece of gear, expression, reaction, animation and effect works on all of
-them. Each friend has a **challenge** to earn, and a toast celebrates the
-moment one becomes available:
+silhouette** (round blob, tall jackal, gumdrop, stone block, heart, egg), yet
+every piece of gear, expression, reaction, animation and effect works on all
+of them. Each friend has a **challenge** to earn, and a toast celebrates the
+moment one becomes available. Once you pick a friend, the whole app — header
+logo, title, banner, track, empty state and dressing room — follows your
+choice, and the page headline becomes **"Make *their name* Great Again"**:
 
 | Friend | Look | Challenge |
 |---|---|---|
 | **Zico** 💜 | Violet blob | Available from the start |
-| **Bastet** 🌸 | Pink with cat ears | Complete **100 tasks** |
-| **Khnum** 🐏 | Amber with ram horns | Reach a **14-day** best streak |
-| **Sobek** 🐊 | Green with croc spikes | Earn **10 perfect days** |
-| **Seth** 🌩️ | Yellow with lightning antenna | Save up **250 coins** |
-| **Anubis** 🐺 | Charcoal jackal — **tall** body, ears + muzzle | Complete **30 tasks in one day** |
-| **Horus** 🦅 | Sky-blue falcon with beak + crest | Reach a **25-day** best streak |
-| **Bes** 🦁 | Golden lion — **block** body, fluffy mane | Save up **500 coins** |
-| **Ra** ☀️ | Red sun with rays | Complete **300 tasks** |
-| **Isis** 🌙 | Teal enchantress — **heart** body, moon-disc headdress | Earn **20 perfect days** |
-| **Ptah** 🛠️ | Slate craftsman — **block** body, atef cap | Save up **750 coins** |
-| **Neith** 🎯 | Cyan huntress — **gumdrop** body, double plume | Complete **40 tasks in one day** |
+| **Zizi** 🌸 | Pink blob with cat ears | Complete **100 tasks** |
+| **Chiko** 🐏 | Amber blob with ram horns | Reach a **14-day** best streak |
+| **Tito** 🐊 | Green blob with croc spikes | Earn **10 perfect days** |
+| **Mido** 🌩️ | Yellow blob with lightning antenna | Save up **250 coins** |
+| **Bondok** 🐺 | Charcoal jackal — **tall** body, dog ears + muzzle | Complete **30 tasks in one day** |
+| **Kimo** 🦅 | Sky-blue falcon with beak + crest | Reach a **25-day** best streak |
+| **Semsem** 🦁 | Golden lion — **block** body, fluffy mane | Save up **500 coins** |
+| **Body** ☀️ | Red sun with rays | Complete **300 tasks** |
+| **Tota** 🌙 | Teal enchantress — **heart** body, moon-disc headdress | Earn **20 perfect days** |
+| **Simo** 🛠️ | Slate craftsman — **block** body, atef cap | Save up **750 coins** |
+| **Fifi** 🎯 | Cyan huntress — **gumdrop** body, double plume | Complete **40 tasks in one day** |
+| **Zizo** ⭐ | Magenta star with sparkle headdress | Track **30 days** in the app |
+| **Joe** 🕶️ | Indigo punk — **egg** body, spiky hair | Reach a **30-day** best streak |
 
 Locked friends show their challenge progress bar in the modal; unlocked ones
 can be selected anytime, and the whole app (header, banner, track, empty
@@ -172,7 +176,8 @@ track every time you complete tasks.
 - Toast notifications for every action
 - **Accessible wardrobe modal** — opening it locks page scroll, focuses the
   dialog, traps Tab inside it, and restores focus + scroll on close (Esc works too)
-- Live tab title showing pending count: `(3) Make Zico Great Again`
+- Live tab title showing pending count and the active friend:
+  `(3) Make Zizi Great Again`
 - Full **`prefers-reduced-motion`** support, semantic HTML, ARIA roles, and visible focus rings
 - Custom favicon, adaptive browser theme color, and social (OG/Twitter) meta tags
 

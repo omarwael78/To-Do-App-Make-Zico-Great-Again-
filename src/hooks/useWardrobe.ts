@@ -6,7 +6,6 @@ const COINS_KEY = 'taskflow-coins';
 const OWNED_KEY = 'taskflow-wardrobe-owned';
 const EQUIPPED_KEY = 'taskflow-wardrobe-equipped';
 const MASCOT_KEY = 'taskflow-mascot';
-const UNLOCK_ALL_KEY = 'taskflow-unlock-all';
 
 export interface ToggleResult {
   ok: boolean;
@@ -32,15 +31,6 @@ export function useWardrobe(streak: number) {
   );
   const [mascot, setMascot] = useLocalStorage<string>(MASCOT_KEY, 'zico');
 
-  // Test mode: everything counts as owned and worn.
-  const [unlockAll, setUnlockAll] = useLocalStorage<boolean>(UNLOCK_ALL_KEY, false);
-
-  // Test mode: wear every gadget so the full kit is visible at once.
-  useEffect(() => {
-    if (!unlockAll) return;
-    setEquipped(() => WARDROBE.map((g) => g.id));
-  }, [unlockAll, setEquipped]);
-
   // Keep streak gear in sync with the streak.
   useEffect(() => {
     setEquipped((prev) => {
@@ -62,8 +52,8 @@ export function useWardrobe(streak: number) {
 
   const isOwned = useCallback(
     (g: Gadget): boolean =>
-      unlockAll ? true : g.kind === 'streak' ? streak >= (g.level ?? 0) : owned.includes(g.id),
-    [streak, owned, unlockAll]
+      g.kind === 'streak' ? streak >= (g.level ?? 0) : owned.includes(g.id),
+    [streak, owned]
   );
 
   const isEquipped = useCallback((id: string): boolean => equipped.includes(id), [equipped]);
@@ -124,8 +114,7 @@ export function useWardrobe(streak: number) {
     setCoins(0);
     setOwned([]);
     setEquipped(STREAK_GADGETS.filter((g) => streak >= (g.level ?? 0)).map((g) => g.id));
-    setUnlockAll(false);
-  }, [streak, setCoins, setOwned, setEquipped, setUnlockAll]);
+  }, [streak, setCoins, setOwned, setEquipped]);
 
   return {
     coins,
@@ -133,8 +122,6 @@ export function useWardrobe(streak: number) {
     equipped,
     mascot,
     setMascot,
-    unlockAll,
-    setUnlockAll,
     isOwned,
     isEquipped,
     addCoins,
