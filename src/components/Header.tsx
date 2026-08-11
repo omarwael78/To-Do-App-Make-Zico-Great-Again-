@@ -6,9 +6,10 @@ interface HeaderProps {
   theme: Theme;
   onToggleTheme: () => void;
   streak: number;
+  coins: number;
 }
 
-export default function Header({ theme, onToggleTheme, streak }: HeaderProps) {
+export default function Header({ theme, onToggleTheme, streak, coins }: HeaderProps) {
   const dayLabel = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'long',
@@ -45,15 +46,24 @@ export default function Header({ theme, onToggleTheme, streak }: HeaderProps) {
 
         <div className="flex flex-col items-end gap-2">
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-          {streak > 0 && (
+          <div className="flex items-center gap-1.5">
+            {streak > 0 && (
+              <span
+                title={`${streak} consecutive productive day${streak === 1 ? '' : 's'}`}
+                className="animate-fade-in-scale flex items-center gap-1 rounded-full border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 px-2.5 py-1 text-[11px] font-extrabold text-amber-600 shadow-sm dark:border-amber-500/30 dark:from-amber-500/10 dark:to-orange-500/10 dark:text-amber-400"
+              >
+                <span className="animate-flame">🔥</span>
+                {streak} day{streak === 1 ? '' : 's'}
+              </span>
+            )}
             <span
-              title={`${streak} consecutive productive day${streak === 1 ? '' : 's'}`}
-              className="animate-fade-in-scale flex items-center gap-1 rounded-full border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 px-2.5 py-1 text-[11px] font-extrabold text-amber-600 shadow-sm dark:border-amber-500/30 dark:from-amber-500/10 dark:to-orange-500/10 dark:text-amber-400"
+              key={coins}
+              title="Coins — earn 1 per completed task"
+              className="animate-pop flex items-center gap-1 rounded-full border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 px-2.5 py-1 text-[11px] font-extrabold text-amber-600 shadow-sm dark:border-amber-500/30 dark:from-amber-500/10 dark:to-orange-500/10 dark:text-amber-400"
             >
-              <span className="animate-flame">🔥</span>
-              {streak} day{streak === 1 ? '' : 's'}
+              🪙 {coins}
             </span>
-          )}
+          </div>
         </div>
       </div>
     </header>

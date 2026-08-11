@@ -1,5 +1,6 @@
 import { cn } from '@/utils/cn';
-import Mascot, { GADGETS } from './Mascot';
+import Mascot from './Mascot';
+import { STREAK_GADGETS, SHOP_GADGETS, type Gadget } from '@/data/wardrobe';
 import type { Mood, Reaction } from '@/types/task';
 
 interface MascotBannerProps {
@@ -10,6 +11,13 @@ interface MascotBannerProps {
   completed: number;
   active: number;
   reaction: Reaction;
+  coins: number;
+  owned: string[];
+  equipped: string[];
+  /** Non-null while a coin reward is animating (bump `id` to replay). */
+  coinFx: { id: number; amount: number } | null;
+  onToggleEquip: (id: string) => void;
+  onOpenShop: () => void;
 }
 
 const SAD = new Set<Mood>(['sad', 'very-sad']);
@@ -70,6 +78,12 @@ export default function MascotBanner({
   completed,
   active,
   reaction,
+  coins,
+  owned,
+  equipped,
+  coinFx,
+  onToggleEquip,
+  onOpenShop,
 }: MascotBannerProps) {
   const info = MOOD_INFO[mood];
   const sad = SAD.has(mood);
@@ -101,6 +115,12 @@ export default function MascotBanner({
     : streak === 0
       ? 'Finish a task to start your streak!'
       : `Level ${level} · ${5 - levelProgress} day${5 - levelProgress === 1 ? '' : 's'} to the next`;
+
+  /** Items shown in the strip: all streak gear + owned shop items. */
+  const stripItems: Gadget[] = [
+    ...STREAK_GADGETS,
+    ...SHOP_GADGETS.filter((g) => owned.includes(g.id)),
+  ];
 
   return (
     <section
@@ -141,11 +161,29 @@ export default function MascotBanner({
             >
               ⏳ {active} left
             </span>
+            <button
+              onClick={onOpenShop}
+              title="Open the wardrobe & shop"
+              className="animate-pop rounded-full border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 px-2 py-0.5 text-[10px] font-extrabold text-amber-600 transition-transform hover:scale-105 dark:border-amber-500/30 dark:from-amber-500/10 dark:to-orange-500/10 dark:text-amber-400"
+            >
+              🪙 {coins}
+            </button>
           </div>
         </div>
 
         {/* Walking track */}
         <div className="relative mt-4 h-16">
+          {/* Floating coin reward */}
+          {coinFx && (
+            <span
+              key={coinFx.id}
+              className="animate-coin-pop pointer-events-none absolute left-1/2 top-0 z-10 -translate-x-1/2 text-sm font-extrabold text-amber-500 dark:text-amber-400"
+              aria-hidden="true"
+            >
+              +{coinFx.amount} 🪙
+            </span>
+          )}
+
           {/* Track */}
           <div className="absolute inset-x-2 bottom-0 h-2 rounded-full bg-slate-100 dark:bg-slate-700/70">
             <div
@@ -177,7 +215,7 @@ export default function MascotBanner({
               missedToday={active}
               walking={total > 0}
               reaction={reaction}
-              streak={streak}
+              equipped={equipped}
               size={62}
             />
           </div>
@@ -193,27 +231,56 @@ export default function MascotBanner({
           </span>
         </div>
 
-        {/* Gadget wardrobe */}
+        {/* Gadget wardrobe — click a chip to equip / unequip */}
         <div className="mt-2 flex items-center gap-2 border-t border-slate-100 pt-2 dark:border-slate-700/50">
           <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-300 dark:text-slate-600">
             Gear
           </span>
-          <div className="flex gap-1.5">
-            {GADGETS.map((g) => {
-              const unlocked = streak >= g.level;
+          <div className="flex flex-1 flex-wrap items-center gap-1.5">
+            {stripItems.map((g) => {
+              const isStreakItem = g.kind === 'streak';
+              const isOwned = isStreakItem ? streak >= (g.level ?? 0) : owned.includes(g.id);
+              const isWorn = isOwned && equipped.includes(g.id);
+              const title = isOwned
+                ? `${g.name} — click to ${isWorn ? 'unequip' : 'equip'}`
+                : isStreakItem
+                  ? `${g.name} · unlock at a ${g.level}-day streak`
+                  : `${g.name} · buy it in the shop with coins`;
               return (
-                <span
-                  key={g.name}
-                  title={unlocked ? `${g.name} — unlocked!` : `${g.name} · unlock at a ${g.level}-day streak`}
+                <button
+                  key={g.id}
+                  onClick={() => onToggleEquip(g.id)}
+                  title={title}
+                  aria-label={title}
                   className={cn(
-                    'text-sm leading-none transition-all duration-300',
-                    unlocked ? 'animate-fade-in-scale' : 'opacity-25 grayscale'
+                    'relative rounded-full px-1.5 pb-1 pt-0.5 text-sm leading-none transition-all duration-300',
+                    isWorn
+                      ? 'bg-amber-50 shadow-sm ring-1 ring-amber-200 dark:bg-amber-500/10 dark:ring-amber-500/30'
+                      : isOwned
+                        ? 'hover:bg-slate-50 dark:hover:bg-slate-700/40'
+                        : 'cursor-not-allowed opacity-25 grayscale'
                   )}
                 >
                   {g.icon}
-                </span>
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      'absolute -bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full transition-opacity',
+                      isWorn ? 'bg-amber-400 opacity-100' : 'opacity-0'
+                    )}
+                  />
+                </button>
               );
             })}
+
+            {/* Open the shop */}
+            <button
+              onClick={onOpenShop}
+              title="Browse the coin shop"
+              className="ml-auto flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-2.5 py-1 text-[10px] font-extrabold text-white shadow-sm transition-transform hover:scale-105"
+            >
+              🛒 Shop
+            </button>
           </div>
         </div>
       </div>

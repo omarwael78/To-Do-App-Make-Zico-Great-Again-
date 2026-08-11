@@ -12,8 +12,8 @@ interface MascotProps {
   walking?: boolean;
   /** One-shot animation to replay (bump `id` to retrigger). */
   reaction?: Reaction;
-  /** Consecutive productive days — unlocks gadget tiers every 5 days. */
-  streak?: number;
+  /** Wardrobe item ids currently worn (already filtered to owned items). */
+  equipped?: string[];
   size?: number;
   className?: string;
 }
@@ -21,24 +21,18 @@ interface MascotProps {
 const SAD = new Set<Mood>(['sad', 'very-sad']);
 const HAPPY = new Set<Mood>(['happy', 'very-happy', 'ecstatic']);
 
-/** Wardrobe items Zico unlocks with his streak. */
-export const GADGETS = [
-  { level: 5, name: 'Black glasses', icon: '🕶️' },
-  { level: 10, name: 'Gold chain', icon: '⛓️' },
-  { level: 15, name: 'Hero cape', icon: '🦸' },
-  { level: 20, name: 'Golden halo', icon: '✨' },
-  { level: 25, name: 'Royal crown', icon: '👑' },
-] as const;
+const HEADWEAR = new Set(['hat', 'cap', 'headband']);
 
 /**
  * "Zico" — the Make Zico Great Again mascot. A squishy violet blob whose
  * expression and animations react to your day in real time:
  *  - walks a progress track as you complete tasks (jumps on each completion)
  *  - sighs and deflates when a task is un-checked
- *  - grows sparkles, hearts and a crown as excitement rises
+ *  - grows sparkles and hearts as excitement rises, showers confetti when
+ *    ecstatic
  *  - sweats and sheds tears when many tasks are left pending
- *  - unlocks wardrobe gadgets every 5 streak days (glasses, chain, cape,
- *    halo, crown)
+ *  - wears whatever wardrobe items are equipped (streak gear, hats, weapons
+ *    and pets from the shop)
  */
 export default function Mascot({
   mood,
@@ -46,7 +40,7 @@ export default function Mascot({
   missedToday = 0,
   walking = false,
   reaction = { id: 0, type: 'none' },
-  streak = 0,
+  equipped = [],
   size = 72,
   className,
 }: MascotProps) {
@@ -69,13 +63,46 @@ export default function Mascot({
   const levelUp = reaction.type === 'levelup';
   const ecstatic = mood === 'ecstatic';
 
+  /* ---------- expression system ---------- */
+  // With nothing on the list Zico doesn't force a smile — he gets bored and
+  // sleepy instead. His idle face cycles through a few moods every few seconds.
+  const idle =
+    !walking && excitement === 0 && missedToday === 0 && !celebrate && !levelUp && !sighing;
+  const [idleFace, setIdleFace] = useState<'neutral' | 'bored' | 'sleepy'>('neutral');
+  useEffect(() => {
+    if (!idle) {
+      setIdleFace('neutral');
+      return;
+    }
+    const faces: Array<'neutral' | 'bored' | 'sleepy'> = ['neutral', 'bored', 'neutral', 'sleepy'];
+    let i = 0;
+    const t = window.setInterval(() => {
+      i = (i + 1) % faces.length;
+      setIdleFace(faces[i]);
+    }, 4800);
+    return () => window.clearInterval(t);
+  }, [idle]);
+
+  // One-shot reaction faces override the mood face
+  const showWow = celebrate;
+  const showLaugh = levelUp;
+  const showMeh = sighing;
+  // The happy mood face only wins when something is actually going on
+  const showHappy = faceHappy && !idle;
+  const showIdle = idle && !faceSad;
+  const showAllDone = showHappy && excitement >= 3;
+  const showTongue = showAllDone;
+  const showPout = faceSad && missedToday >= 3;
+
   /* ---------- gadget tiers ---------- */
-  const hasGlasses = streak >= 5;
-  const hasChain = streak >= 10;
-  const hasCape = streak >= 15;
-  const hasHalo = streak >= 20;
-  const hasGrandCrown = streak >= 25;
-  const moodCrown = ecstatic && !hasGrandCrown;
+  const has = (id: string) => equipped.includes(id);
+  const hasGlasses = has('glasses');
+  const hasChain = has('chain');
+  const hasCape = has('cape');
+  const hasHalo = has('halo');
+  const hasGrandCrown = has('crown');
+  // Hats cover the crown — don't render both at once
+  const wearingHeadwear = [...HEADWEAR].some((id) => equipped.includes(id));
 
   /* ---------- body animation ---------- */
   let anim = 'animate-mascot-breathe';
@@ -84,7 +111,7 @@ export default function Mascot({
   else if (levelUp) anim = 'animate-mascot-spin';
   else if (faceSad) anim = 'animate-mascot-wiggle';
   else if (walking) anim = excitement >= 2 ? 'animate-mascot-walk-fast' : 'animate-mascot-walk';
-  else if (faceHappy) anim = 'animate-mascot-bob';
+  else if (showHappy) anim = 'animate-mascot-bob';
 
   /* ---------- face geometry ---------- */
   const eyeSpan = 12 + excitement * 2;
@@ -113,7 +140,7 @@ export default function Mascot({
             <stop offset="100%" stopColor="#6366f1" />
           </linearGradient>
           <linearGradient id="mascot-cape" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#f87171" />
+            <stop offset="0%" stopColor="#ef4444" />
             <stop offset="100%" stopColor="#b91c1c" />
           </linearGradient>
           <linearGradient id="mascot-gold" x1="0" y1="0" x2="0" y2="1">
@@ -124,6 +151,16 @@ export default function Mascot({
 
         {/* Ground shadow */}
         <ellipse cx="50" cy="95" rx="20" ry="3.5" fill="#0f172a" opacity="0.12" />
+
+        {/* Rainbow trail (streak 30+) — shimmering arcs behind Zico */}
+        {has('rainbow') && (
+          <g className="animate-rainbow-shimmer" aria-hidden="true">
+            <path d="M22 87 Q50 62 78 87" fill="none" stroke="#f87171" strokeWidth="3" strokeLinecap="round" />
+            <path d="M26 90.5 Q50 68 74 90.5" fill="none" stroke="#fbbf24" strokeWidth="3" strokeLinecap="round" />
+            <path d="M30 94 Q50 74 70 94" fill="none" stroke="#34d399" strokeWidth="3" strokeLinecap="round" />
+            <path d="M34 97.5 Q50 80 66 97.5" fill="none" stroke="#60a5fa" strokeWidth="3" strokeLinecap="round" />
+          </g>
+        )}
 
         {/* Screen-space burst ring on completion */}
         {celebrate && (
@@ -168,7 +205,7 @@ export default function Mascot({
         {sighing && <circle className="animate-puff-rise" cx="30" cy="44" r="4.2" fill="#cbd5e1" />}
 
         {/* Confetti (ecstatic) */}
-        {ecstatic && !hasGrandCrown && (
+        {ecstatic && (
           <g aria-hidden="true">
             <rect x="13" y="2" width="3.5" height="5" rx="1" fill="#f472b6" className="animate-confetti" />
             <rect x="83" y="4" width="3.5" height="5" rx="1" fill="#fbbf24" className="animate-confetti" style={{ animationDelay: '0.5s' }} />
@@ -186,14 +223,43 @@ export default function Mascot({
           </g>
         )}
 
-        {/* Hero cape (behind body) */}
+        {/* Hero cape (behind body) — bright red with gold trim */}
         {hasCape && (
-          <path
-            className="animate-cape-wave"
-            d="M42 38 C28 42 20 58 24 78 C26 88 34 95 45 96 C48 96 50 90 50 84 C50 90 52 96 55 96 C66 95 74 88 76 78 C80 58 72 42 58 38 Z"
-            fill="url(#mascot-cape)"
-            aria-hidden="true"
-          />
+          <g aria-hidden="true">
+            <path
+              className="animate-cape-wave"
+              d="M40 36 C22 42 10 58 14 80 C16 92 28 98 44 98 C47 98 50 88 50 80 C50 88 53 98 56 98 C72 98 84 92 86 80 C90 58 78 42 60 36 Z"
+              fill="url(#mascot-cape)"
+              stroke="#fbbf24"
+              strokeWidth="2.4"
+              strokeLinejoin="round"
+            />
+            <circle cx="50" cy="38" r="3.2" fill="#fbbf24" stroke="#b45309" strokeWidth="1.2" />
+          </g>
+        )}
+
+        {/* Fairy wings (shop) — flutter behind the body */}
+        {has('wings') && (
+          <g aria-hidden="true">
+            <g className="animate-wing-flutter">
+              <path
+                d="M48 50 C38 34 22 34 16 46 C12 55 20 66 34 68 C42 69 47 64 48 57 Z"
+                fill="rgba(232, 121, 249, 0.7)"
+                stroke="#c026d3"
+                strokeWidth="1.2"
+              />
+              <path d="M22 44 C28 42 36 44 44 52" fill="none" stroke="#e879f9" strokeWidth="1" opacity="0.8" />
+            </g>
+            <g className="animate-wing-flutter" style={{ animationDelay: '0.12s', transformOrigin: '15% 60%' }}>
+              <path
+                d="M52 50 C62 34 78 34 84 46 C88 55 80 66 66 68 C58 69 53 64 52 57 Z"
+                fill="rgba(232, 121, 249, 0.7)"
+                stroke="#c026d3"
+                strokeWidth="1.2"
+              />
+              <path d="M78 44 C72 42 64 44 56 52" fill="none" stroke="#e879f9" strokeWidth="1" opacity="0.8" />
+            </g>
+          </g>
         )}
 
         {/* Body */}
@@ -224,8 +290,8 @@ export default function Mascot({
           </g>
         )}
 
-        {/* Crowns */}
-        {hasGrandCrown ? (
+        {/* Royal crown — exclusive 25-day streak gear */}
+        {hasGrandCrown && !wearingHeadwear && (
           <g aria-hidden="true">
             <path
               d="M25 15 L31 3 L42 11 L50 1 L58 11 L69 3 L75 15 L75 21 L25 21 Z"
@@ -240,21 +306,6 @@ export default function Mascot({
             <circle cx="42" cy="19" r="1.4" fill="#fbbf24" />
             <circle cx="58" cy="19" r="1.4" fill="#fbbf24" />
           </g>
-        ) : (
-          moodCrown && (
-            <g aria-hidden="true">
-              <path
-                d="M28 13 L33 5 L41 11 L50 4 L59 11 L67 5 L72 13 L72 18 L28 18 Z"
-                fill="#fbbf24"
-                stroke="#d97706"
-                strokeWidth="1.4"
-                strokeLinejoin="round"
-              />
-              <circle cx="36" cy="15" r="1.6" fill="#f43f5e" />
-              <circle cx="50" cy="16" r="1.6" fill="#3b82f6" />
-              <circle cx="64" cy="15" r="1.6" fill="#22c55e" />
-            </g>
-          )
         )}
 
         {/* Golden halo (streak 20+) */}
@@ -265,8 +316,35 @@ export default function Mascot({
           </g>
         )}
 
-        {/* Sparkles (very happy or excited) */}
-        {(HAPPY.has(mood) || excitement >= 2) && !ecstatic && !levelUp && (
+        {/* Ninja headband (shop) */}
+        {has('headband') && (
+          <g aria-hidden="true">
+            <path d="M28 30 Q50 27 72 30 L72 34 Q50 31 28 34 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="0.8" />
+            <path d="M71 27 L82 23 L79 32 L83 39 L72 36 Z" fill="#dc2626" />
+            <path d="M79 32 L83 39 L75 34 Z" fill="#ef4444" />
+          </g>
+        )}
+
+        {/* Street cap (shop) */}
+        {has('cap') && (
+          <g aria-hidden="true">
+            <path d="M36 18 Q38 4 50 4 Q62 4 64 18 Z" fill="#2563eb" stroke="#1e40af" strokeWidth="1" />
+            <path d="M63 15 Q75 12 77 17 Q73 20 63 19 Z" fill="#1d4ed8" stroke="#1e40af" strokeWidth="0.8" />
+            <circle cx="50" cy="5" r="2" fill="#3b82f6" stroke="#1e40af" strokeWidth="0.6" />
+          </g>
+        )}
+
+        {/* Top hat (shop) */}
+        {has('hat') && (
+          <g aria-hidden="true">
+            <path d="M39 14 L39 4 Q39 2 41 2 L59 2 Q61 2 61 4 L61 14 Z" fill="#0f172a" stroke="#334155" strokeWidth="1" />
+            <path d="M39 8 L61 8 L61 11 L39 11 Z" fill="#dc2626" />
+            <ellipse cx="50" cy="14.5" rx="17" ry="3.2" fill="#0f172a" stroke="#334155" strokeWidth="1" />
+          </g>
+        )}
+
+        {/* Sparkles (happy or excited) */}
+        {(HAPPY.has(mood) || excitement >= 2) && !levelUp && (
           <g aria-hidden="true">
             <g transform="translate(16, 16) scale(1.1)">
               <path className="mascot-sparkle" d="M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z" fill="#fbbf24" />
@@ -292,8 +370,26 @@ export default function Mascot({
           </g>
         )}
 
+        {/* Sleepy "z z z" (idle with nothing to do) */}
+        {showIdle && idleFace === 'sleepy' && (
+          <g aria-hidden="true">
+            <text x="76" y="32" fontSize="6.5" fontWeight="bold" fill="#94a3b8" className="animate-twinkle">z</text>
+            <text x="83" y="25" fontSize="5" fontWeight="bold" fill="#a5b4fc" className="animate-twinkle" style={{ animationDelay: '0.4s' }}>z</text>
+            <text x="88" y="19" fontSize="4" fontWeight="bold" fill="#c4b5fd" className="animate-twinkle" style={{ animationDelay: '0.8s' }}>z</text>
+          </g>
+        )}
+
+        {/* Bored "..." (idle with nothing to do) */}
+        {showIdle && idleFace === 'bored' && (
+          <g aria-hidden="true">
+            <circle cx="80" cy="27" r="1.1" fill="#94a3b8" className="animate-twinkle" />
+            <circle cx="86" cy="25" r="1.1" fill="#a5b4fc" className="animate-twinkle" style={{ animationDelay: '0.35s' }} />
+            <circle cx="92" cy="23" r="1.1" fill="#c4b5fd" className="animate-twinkle" style={{ animationDelay: '0.7s' }} />
+          </g>
+        )}
+
         {/* Blush (happy face) */}
-        {faceHappy && (
+        {showHappy && (
           <g aria-hidden="true">
             <ellipse cx="25" cy="54" rx="5" ry="3" fill="#f9a8d4" opacity="0.7" />
             <ellipse cx="75" cy="54" rx="5" ry="3" fill="#f9a8d4" opacity="0.7" />
@@ -329,7 +425,43 @@ export default function Mascot({
               <path d="M31 47 Q37 50 43 47" stroke="#312e81" strokeWidth="3.4" fill="none" strokeLinecap="round" />
               <path d="M57 47 Q63 50 69 47" stroke="#312e81" strokeWidth="3.4" fill="none" strokeLinecap="round" />
             </>
-          ) : faceHappy && excitement >= 3 ? (
+          ) : showWow ? (
+            <>
+              <circle cx="37" cy="45" r={eyeR + 1.5} fill="#312e81" />
+              <circle cx="38.9" cy="43.3" r="2" fill="#ffffff" />
+              <circle cx="63" cy="45" r={eyeR + 1.5} fill="#312e81" />
+              <circle cx="64.9" cy="43.3" r="2" fill="#ffffff" />
+            </>
+          ) : showLaugh ? (
+            <>
+              <path d={`M${37 - eyeSpan / 2} ${eyeY} Q37 ${eyeY - 8} ${37 + eyeSpan / 2} ${eyeY}`} stroke="#312e81" strokeWidth="3.6" fill="none" strokeLinecap="round" />
+              <path d={`M${63 - eyeSpan / 2} ${eyeY} Q63 ${eyeY - 8} ${63 + eyeSpan / 2} ${eyeY}`} stroke="#312e81" strokeWidth="3.6" fill="none" strokeLinecap="round" />
+            </>
+          ) : showMeh ? (
+            <>
+              <path d="M33 47 Q37 49 41 47" stroke="#312e81" strokeWidth="3" fill="none" strokeLinecap="round" />
+              <path d="M59 47 Q63 49 67 47" stroke="#312e81" strokeWidth="3" fill="none" strokeLinecap="round" />
+            </>
+          ) : showIdle ? (
+            idleFace === 'sleepy' ? (
+              <>
+                <path d="M32 47 Q37 50.5 42 47" stroke="#312e81" strokeWidth="3" fill="none" strokeLinecap="round" />
+                <path d="M58 47 Q63 50.5 68 47" stroke="#312e81" strokeWidth="3" fill="none" strokeLinecap="round" />
+              </>
+            ) : idleFace === 'bored' ? (
+              <>
+                <path d="M32.5 47 Q37 45.5 41.5 47" stroke="#312e81" strokeWidth="3" fill="none" strokeLinecap="round" />
+                <path d="M58.5 47 Q63 45.5 67.5 47" stroke="#312e81" strokeWidth="3" fill="none" strokeLinecap="round" />
+              </>
+            ) : (
+              <>
+                <circle cx="37" cy="46" r={eyeR} fill="#312e81" />
+                <circle cx={38.6 + excitement * 0.3} cy={44.4} r="1.7" fill="#ffffff" />
+                <circle cx="63" cy="46" r={eyeR} fill="#312e81" />
+                <circle cx={64.6 + excitement * 0.3} cy={44.4} r="1.7" fill="#ffffff" />
+              </>
+            )
+          ) : showAllDone ? (
             <>
               <g transform="translate(37, 45)">
                 <path d="M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z" fill="#312e81" />
@@ -338,7 +470,7 @@ export default function Mascot({
                 <path d="M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z" fill="#312e81" />
               </g>
             </>
-          ) : faceHappy ? (
+          ) : showHappy ? (
             <>
               <path d={`M${37 - eyeSpan / 2} ${eyeY} Q37 ${eyeY - 7} ${37 + eyeSpan / 2} ${eyeY}`} stroke="#312e81" strokeWidth="3.4" fill="none" strokeLinecap="round" />
               <path d={`M${63 - eyeSpan / 2} ${eyeY} Q63 ${eyeY - 7} ${63 + eyeSpan / 2} ${eyeY}`} stroke="#312e81" strokeWidth="3.4" fill="none" strokeLinecap="round" />
@@ -384,13 +516,192 @@ export default function Mascot({
 
         {/* Mouth */}
         {faceSad ? (
-          <path d="M41 62 Q50 55 59 62" stroke="#312e81" strokeWidth="3.6" fill="none" strokeLinecap="round" />
-        ) : faceHappy ? (
-          <path d={`M${50 - smileSpan / 2} 55 Q50 ${65 + excitement} ${50 + smileSpan / 2} 55`} stroke="#312e81" strokeWidth="3.6" fill="none" strokeLinecap="round" />
+          <>
+            <path d="M41 62 Q50 55 59 62" stroke="#312e81" strokeWidth="3.6" fill="none" strokeLinecap="round" />
+            {showPout && <ellipse cx="50" cy="66" rx="4" ry="2.2" fill="#8b5cf6" opacity="0.55" />}
+          </>
+        ) : showWow ? (
+          <ellipse cx="50" cy="58" rx="3.4" ry="4.2" fill="#312e81" />
+        ) : showLaugh ? (
+          <path d={`M${50 - smileSpan / 2} 56 Q50 ${68 + excitement} ${50 + smileSpan / 2} 56`} stroke="#312e81" strokeWidth="3.4" fill="none" strokeLinecap="round" />
+        ) : showMeh ? (
+          <path d="M43 59.5 Q50 61 57 59.5" stroke="#312e81" strokeWidth="3" fill="none" strokeLinecap="round" />
+        ) : showIdle ? (
+          idleFace === 'sleepy' ? (
+            <ellipse cx="50" cy="59" rx="2.4" ry="2.6" fill="#312e81" />
+          ) : idleFace === 'bored' ? (
+            <path d="M44 60 Q50 59 56 60" stroke="#312e81" strokeWidth="3" fill="none" strokeLinecap="round" />
+          ) : (
+            <path d="M43 58 Q50 62 57 58" stroke="#312e81" strokeWidth="3.4" fill="none" strokeLinecap="round" />
+          )
+        ) : showHappy ? (
+          <>
+            <path d={`M${50 - smileSpan / 2} 55 Q50 ${65 + excitement} ${50 + smileSpan / 2} 55`} stroke="#312e81" strokeWidth="3.6" fill="none" strokeLinecap="round" />
+            {showTongue && <ellipse cx="50" cy="63.5" rx="2.6" ry="3" fill="#fb7185" stroke="#e11d48" strokeWidth="0.6" />}
+          </>
         ) : worried ? (
           <path d="M44 61.5 Q50 64 56 61.5" stroke="#312e81" strokeWidth="3.2" fill="none" strokeLinecap="round" />
         ) : (
           <path d="M43 58 Q50 62 57 58" stroke="#312e81" strokeWidth="3.4" fill="none" strokeLinecap="round" />
+        )}
+
+        {/* Hero sword (shop) */}
+        {has('sword') && (
+          <g transform="rotate(-35 20 56)" aria-hidden="true">
+            <rect x="17" y="20" width="6" height="32" rx="1" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="1" />
+            <path d="M17 20 L23 20 L20 11 Z" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="1" />
+            <rect x="14" y="51" width="12" height="5" rx="1" fill="#b45309" />
+            <rect x="17" y="56" width="6" height="11" rx="1.5" fill="#7c3aed" />
+            <circle cx="20" cy="70" r="2.6" fill="#fbbf24" stroke="#b45309" strokeWidth="0.8" />
+          </g>
+        )}
+
+        {/* Knight shield (shop) */}
+        {has('shield') && (
+          <g transform="rotate(14 16 58)" aria-hidden="true">
+            <path d="M16 44 Q27 47 26 62 Q25 74 16 78 Q7 74 6 62 Q5 47 16 44 Z" fill="#94a3b8" stroke="#e2e8f0" strokeWidth="2" />
+            <path d="M11 54 L21 54 L21 60 L11 60 Z" fill="#1e3a8a" />
+            <path d="M14 51 L14 63" stroke="#1e3a8a" strokeWidth="2.4" />
+          </g>
+        )}
+
+        {/* Archer bow (shop) */}
+        {has('bow') && (
+          <g aria-hidden="true">
+            <path d="M11 36 Q18 55 11 74" fill="none" stroke="#92400e" strokeWidth="3.4" strokeLinecap="round" />
+            <line x1="13.5" y1="36" x2="13.5" y2="74" stroke="#f1f5f9" strokeWidth="1.1" />
+            <line x1="14" y1="55" x2="30" y2="55" stroke="#cbd5e1" strokeWidth="2" />
+            <path d="M30 55 L24 51.5 L24 58.5 Z" fill="#e2e8f0" />
+            <path d="M14 51.5 L14 58.5 L11 55 Z" fill="#f87171" />
+          </g>
+        )}
+
+        {/* Magic wand (shop) */}
+        {has('wand') && (
+          <g aria-hidden="true">
+            <line x1="13" y1="70" x2="30" y2="45" stroke="#78350f" strokeWidth="2.6" strokeLinecap="round" />
+            <g transform="translate(30, 44) scale(1.1)">
+              <path className="mascot-sparkle" d="M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z" fill="#fbbf24" />
+            </g>
+          </g>
+        )}
+
+        {/* Sea trident (shop) */}
+        {has('trident') && (
+          <g transform="rotate(-8 18 54)" aria-hidden="true">
+            <line x1="16" y1="70" x2="16" y2="34" stroke="#b45309" strokeWidth="3" strokeLinecap="round" />
+            <path d="M10 38 L10 42 L16 40 L16 36 Z" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="0.8" />
+            <path d="M22 38 L22 42 L16 40 L16 36 Z" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="0.8" />
+            <path d="M8 42 L24 42" stroke="#e2e8f0" strokeWidth="2.4" strokeLinecap="round" />
+            <path d="M16 30 L19 34 L16 36 L13 34 Z" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="0.8" />
+          </g>
+        )}
+
+        {/* Lightning aura (shop) — crackling energy */}
+        {has('aura') && (
+          <g className="animate-aura-pulse" aria-hidden="true">
+            <path d="M6 42 L14 42 L10 52 L19 52 L7 66 L12 52 L5 52 Z" fill="#fbbf24" stroke="#d97706" strokeWidth="1" />
+            <path
+              d="M81 34 L89 34 L85 44 L94 44 L82 58 L87 44 L80 44 Z"
+              fill="#fbbf24"
+              stroke="#d97706"
+              strokeWidth="1"
+              style={{ animationDelay: '0.35s' }}
+            />
+          </g>
+        )}
+
+        {/* Cat pet (shop) */}
+        {has('cat') && (
+          <g className="animate-pet-bob" aria-hidden="true">
+            <path d="M92 88 Q99 82 97 74" fill="none" stroke="#f97316" strokeWidth="2.4" strokeLinecap="round" />
+            <ellipse cx="87" cy="87" rx="6.5" ry="6" fill="#f97316" />
+            <circle cx="87" cy="76" r="5.4" fill="#fb923c" />
+            <path d="M83.5 73 L81.5 67.5 L86 72 Z" fill="#f97316" />
+            <path d="M90.5 73 L92.5 67.5 L88 72 Z" fill="#f97316" />
+            <circle cx="85.4" cy="75.6" r="0.9" fill="#1c1917" />
+            <circle cx="88.6" cy="75.6" r="0.9" fill="#1c1917" />
+            <path d="M87 78.5 L88.4 79.4 L87 80.3 Z" fill="#fda4af" />
+          </g>
+        )}
+
+        {/* Dog pet (shop) */}
+        {has('dog') && (
+          <g className="animate-pet-bob" aria-hidden="true">
+            <ellipse cx="87" cy="87" rx="6.5" ry="6" fill="#92400e" />
+            <ellipse cx="83.5" cy="77" rx="2.4" ry="4" fill="#78350f" transform="rotate(12 83.5 77)" />
+            <ellipse cx="90.5" cy="77" rx="2.4" ry="4" fill="#78350f" transform="rotate(-12 90.5 77)" />
+            <circle cx="87" cy="76" r="5.6" fill="#b45309" />
+            <circle cx="85.4" cy="75.2" r="0.9" fill="#1c1917" />
+            <circle cx="88.6" cy="75.2" r="0.9" fill="#1c1917" />
+            <ellipse cx="87" cy="79" rx="2.6" ry="1.8" fill="#fcd9b6" />
+            <path d="M92.5 87 Q95 84 93 81" fill="none" stroke="#78350f" strokeWidth="2.2" strokeLinecap="round" />
+          </g>
+        )}
+
+        {/* Turtle pet (shop) */}
+        {has('turtle') && (
+          <g className="animate-pet-bob" aria-hidden="true">
+            <path d="M79 88 A8.5 8.5 0 0 1 96 88 Z" fill="#22c55e" stroke="#15803d" strokeWidth="1.4" />
+            <path d="M83 84 L83 88 M87.5 83.5 L87.5 88 M91 84 L91 88" stroke="#15803d" strokeWidth="1.2" />
+            <circle cx="77.5" cy="85" r="2.8" fill="#16a34a" />
+            <circle cx="76.8" cy="84.6" r="0.6" fill="#1c1917" />
+            <ellipse cx="84" cy="88.5" rx="2.2" ry="1.3" fill="#16a34a" />
+            <ellipse cx="91" cy="88.5" rx="2.2" ry="1.3" fill="#16a34a" />
+            <path d="M95.5 90 Q97.5 91.5 96.5 93" fill="none" stroke="#15803d" strokeWidth="1.6" strokeLinecap="round" />
+          </g>
+        )}
+
+        {/* Owl pet (shop) */}
+        {has('owl') && (
+          <g className="animate-pet-bob" aria-hidden="true">
+            <path d="M84 72.5 L82.5 67.5 L86.2 71.5 Z" fill="#6d28d9" />
+            <path d="M90 72.5 L91.5 67.5 L87.8 71.5 Z" fill="#6d28d9" />
+            <ellipse cx="87" cy="84" rx="6" ry="7" fill="#7c3aed" />
+            <circle cx="87" cy="74" r="5.8" fill="#8b5cf6" />
+            <circle cx="84.8" cy="73.5" r="2.3" fill="#f8fafc" />
+            <circle cx="89.2" cy="73.5" r="2.3" fill="#f8fafc" />
+            <circle cx="84.8" cy="73.5" r="1.1" fill="#1e1b4b" />
+            <circle cx="89.2" cy="73.5" r="1.1" fill="#1e1b4b" />
+            <path d="M87 77 L88.2 78.4 L87 79.8 Z" fill="#f59e0b" />
+            <path d="M81.5 83 Q80 87 81.5 90" fill="none" stroke="#6d28d9" strokeWidth="2.6" strokeLinecap="round" />
+            <path d="M92.5 83 Q94 87 92.5 90" fill="none" stroke="#6d28d9" strokeWidth="2.6" strokeLinecap="round" />
+          </g>
+        )}
+
+        {/* Fox pet (shop) */}
+        {has('fox') && (
+          <g className="animate-pet-bob" aria-hidden="true">
+            <path d="M86 88 Q94 82 92 74" fill="none" stroke="#f97316" strokeWidth="2.6" strokeLinecap="round" />
+            <circle cx="89" cy="70" r="1.8" fill="#fff7ed" />
+            <ellipse cx="86" cy="88" rx="6.5" ry="5.5" fill="#f97316" />
+            <path d="M81.5 84 L81 78 L85 81.5 Z" fill="#f97316" />
+            <path d="M90.5 84 L91 78 L87 81.5 Z" fill="#f97316" />
+            <circle cx="86" cy="78" r="5" fill="#fb923c" />
+            <path d="M82.5 76.5 L83 71.5 L86 75.5 Z" fill="#ea580c" />
+            <path d="M89.5 76.5 L89 71.5 L86 75.5 Z" fill="#ea580c" />
+            <circle cx="84.6" cy="77.5" r="0.8" fill="#1c1917" />
+            <circle cx="87.4" cy="77.5" r="0.8" fill="#1c1917" />
+            <circle cx="86" cy="79.6" r="1.1" fill="#1c1917" />
+          </g>
+        )}
+
+        {/* Mini dragon pet (shop) */}
+        {has('dragon') && (
+          <g className="animate-pet-bob" aria-hidden="true">
+            <path d="M92 86 Q99 78 94 70" fill="none" stroke="#10b981" strokeWidth="2.4" strokeLinecap="round" />
+            <path d="M94 70 L98 66.5 L93 66 Z" fill="#10b981" />
+            <ellipse cx="86" cy="87" rx="6.5" ry="5.5" fill="#34d399" />
+            <path d="M82 85 Q78 80 83 80 Z" fill="#10b981" />
+            <path d="M90 85 Q94 80 89 80 Z" fill="#10b981" />
+            <circle cx="86" cy="77" r="5" fill="#34d399" />
+            <path d="M83.5 73 L82.5 68.5 L85 72.5 Z" fill="#fbbf24" />
+            <path d="M88.5 73 L89.5 68.5 L87 72.5 Z" fill="#fbbf24" />
+            <circle cx="84.6" cy="76.6" r="0.9" fill="#022c22" />
+            <circle cx="87.4" cy="76.6" r="0.9" fill="#022c22" />
+            <path d="M86 79.5 L87.6 80.2 L86 80.9 Z" fill="#a7f3d0" />
+            <ellipse cx="86" cy="85" rx="3.5" ry="2" fill="#a7f3d0" opacity="0.8" />
+          </g>
         )}
       </svg>
     </div>

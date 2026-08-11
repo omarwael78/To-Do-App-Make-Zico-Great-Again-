@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import Header from '@/components/Header';
 import MascotBanner from '@/components/MascotBanner';
-import { GADGETS } from '@/components/Mascot';
 import CelebrationConfetti from '@/components/CelebrationConfetti';
 import DayOverview from '@/components/DayOverview';
 import AddTaskForm from '@/components/AddTaskForm';
@@ -12,9 +11,12 @@ import ViewSwitcher from '@/components/ViewSwitcher';
 import HistoryView from '@/components/HistoryView';
 import ToastStack from '@/components/ToastStack';
 import Footer from '@/components/Footer';
+import WardrobeModal from '@/components/WardrobeModal';
 import { useTaskData } from '@/hooks/useTaskData';
 import { useTheme } from '@/hooks/useTheme';
 import { useToasts } from '@/hooks/useToasts';
+import { useWardrobe } from '@/hooks/useWardrobe';
+import { STREAK_GADGETS, gadgetById } from '@/data/wardrobe';
 import { getDateString } from '@/utils/date';
 import { FilterType, ViewType, Task, Mood, Reaction } from '@/types/task';
 
@@ -44,8 +46,14 @@ export default function App() {
     importData,
   } = useTaskData();
 
+  const wardrobe = useWardrobe(streak);
+
   const [filter, setFilter] = useState<FilterType>('all');
   const [view, setView] = useState<ViewType>('today');
+  const [wardrobeOpen, setWardrobeOpen] = useState(false);
+
+  /** Floating "+N 🪙" animation id (bump to replay). */
+  const [coinFx, setCoinFx] = useState<{ id: number; amount: number } | null>(null);
 
   /* ---------- derived ---------- */
   const counts = useMemo(
@@ -101,13 +109,18 @@ export default function App() {
     else if (diff < 0) setReaction({ id: Date.now(), type: 'sigh' });
   }, [counts.completed]);
 
-  // Full-screen confetti the moment everything is done
+  // Full-screen confetti the moment everything is done + a "perfect day" bonus
   const [showConfetti, setShowConfetti] = useState(false);
   const prevAllDone = useRef(allDone);
   useEffect(() => {
-    if (allDone && !prevAllDone.current) setShowConfetti(true);
+    if (allDone && !prevAllDone.current) {
+      setShowConfetti(true);
+      wardrobe.addCoins(5);
+      setCoinFx({ id: Date.now(), amount: 5 });
+      notify('Perfect day — bonus +5 🪙!', 'success');
+    }
     prevAllDone.current = allDone;
-  }, [allDone]);
+  }, [allDone, wardrobe.addCoins, notify]);
 
   useEffect(() => {
     if (!showConfetti) return;
@@ -124,7 +137,7 @@ export default function App() {
     if (streak <= prev || streak === 0 || streak % 5 !== 0) return;
 
     setReaction({ id: Date.now(), type: 'levelup' });
-    const gadget = GADGETS.find((g) => g.level === streak);
+    const gadget = STREAK_GADGETS.find((g) => g.level === streak);
     notify(
       gadget
         ? `🔥 ${streak}-day streak — Zico unlocked ${gadget.name}!`
@@ -134,6 +147,61 @@ export default function App() {
   }, [streak, notify]);
 
   /* ---------- handlers with feedback ---------- */
+  /** Completing a task earns 1 coin — Zico's shop currency. */
+  const handleToggleTask = useCallback(
+    (id: string) => {
+      const task = tasks.find((t) => t.id === id);
+      if (task && !task.completed) {
+        wardrobe.addCoins(1);
+        setCoinFx({ id: Date.now(), amount: 1 });
+      }
+      toggleTask(id);
+    },
+    [tasks, toggleTask, wardrobe.addCoins]
+  );
+
+  /** "Mark all done" pays out a coin for every pending task. */
+  const handleToggleAll = useCallback(() => {
+    const allDone = counts.all > 0 && counts.completed === counts.all;
+    const amount = allDone ? 0 : counts.active;
+    if (amount > 0) {
+      wardrobe.addCoins(amount);
+      setCoinFx({ id: Date.now(), amount });
+    }
+    toggleAll();
+  }, [counts, toggleAll, wardrobe.addCoins]);
+
+  /** Equip/unequip from the gear strip — explains the lock if refused. */
+  const handleToggleEquip = useCallback(
+    (id: string) => {
+      const res = wardrobe.toggleEquip(id);
+      if (res.ok) return;
+      const gadget = gadgetById(id);
+      if (!gadget) return;
+      if (res.reason === 'streak') {
+        notify(`Locked — ${gadget.name} needs a ${gadget.level}-day streak`, 'info');
+      } else {
+        notify(`${gadget.name} isn't yours yet — buy it with coins in the Shop`, 'info');
+      }
+    },
+    [wardrobe.toggleEquip, notify]
+  );
+
+  /** Buy from the shop — toasts the outcome. */
+  const handleBuy = useCallback(
+    (id: string): boolean => {
+      const gadget = gadgetById(id);
+      const ok = wardrobe.buyItem(id);
+      if (ok && gadget) {
+        notify(`Purchased ${gadget.name} — ${gadget.icon}`, 'success');
+      } else if (!ok && gadget) {
+        notify('Not enough coins — finish more tasks to earn 🪙', 'error');
+      }
+      return ok;
+    },
+    [wardrobe.buyItem, notify]
+  );
+
   const handleAdd = useCallback(
     (text: string) => {
       const added = addTask(text);
@@ -166,11 +234,22 @@ export default function App() {
   const handleEndDay = useCallback(() => {
     const done = counts.completed;
     const total = counts.all;
+    const pct = total > 0 ? done / total : 0;
+    const bonus = pct >= 1 ? 5 : pct >= 0.5 ? 2 : 0;
+    if (bonus > 0) {
+      wardrobe.addCoins(bonus);
+      setCoinFx({ id: Date.now(), amount: bonus });
+    }
     endDay();
     setFilter('all');
     setView('history');
-    notify(`Day saved — ${done}/${total} completed`, 'success');
-  }, [endDay, counts, notify]);
+    notify(
+      bonus > 0
+        ? `Day saved — ${done}/${total} completed · bonus +${bonus} 🪙`
+        : `Day saved — ${done}/${total} completed`,
+      'success'
+    );
+  }, [endDay, counts, wardrobe.addCoins, notify]);
 
   const handleClearHistory = useCallback(() => {
     if (window.confirm('Delete all saved history? This cannot be undone.')) {
@@ -182,15 +261,16 @@ export default function App() {
   const handleReset = useCallback(() => {
     if (
       window.confirm(
-        'Reset tasks, history and suggestions back to the values in src/data/taskflow.json?'
+        'Reset tasks, history, suggestions, coins and wardrobe back to the values in src/data/taskflow.json?'
       )
     ) {
       resetToProjectDefaults();
+      wardrobe.resetWardrobe();
       setView('today');
       setFilter('all');
       notify('Restored project defaults', 'success');
     }
-  }, [resetToProjectDefaults, notify]);
+  }, [resetToProjectDefaults, wardrobe.resetWardrobe, notify]);
 
   const handleRemoveSuggestion = useCallback(
     (text: string) => {
@@ -277,7 +357,12 @@ export default function App() {
       </div>
 
       <div className="relative mx-auto max-w-lg">
-        <Header theme={theme} onToggleTheme={toggleTheme} streak={streak} />
+        <Header
+          theme={theme}
+          onToggleTheme={toggleTheme}
+          streak={streak}
+          coins={wardrobe.coins}
+        />
 
         <ViewSwitcher current={view} onChange={setView} historyCount={history.length} />
 
@@ -292,12 +377,18 @@ export default function App() {
                 completed={counts.completed}
                 active={counts.active}
                 reaction={reaction}
+                coins={wardrobe.coins}
+                owned={wardrobe.owned}
+                equipped={wardrobe.equipped}
+                coinFx={coinFx}
+                onToggleEquip={handleToggleEquip}
+                onOpenShop={() => setWardrobeOpen(true)}
               />
 
               <DayOverview
                 total={counts.all}
                 completed={counts.completed}
-                onToggleAll={toggleAll}
+                onToggleAll={handleToggleAll}
               />
 
               <AddTaskForm onAdd={handleAdd} />
@@ -343,7 +434,7 @@ export default function App() {
 
               <TaskList
                 tasks={filteredTasks}
-                onToggle={toggleTask}
+                onToggle={handleToggleTask}
                 onDelete={handleDelete}
                 onUpdate={updateTask}
                 filter={filter}
@@ -364,6 +455,17 @@ export default function App() {
       </div>
 
       {showConfetti && <CelebrationConfetti />}
+      <WardrobeModal
+        open={wardrobeOpen}
+        onClose={() => setWardrobeOpen(false)}
+        coins={wardrobe.coins}
+        owned={wardrobe.owned}
+        equipped={wardrobe.equipped}
+        streak={streak}
+        onBuy={handleBuy}
+        onToggle={handleToggleEquip}
+        onWearAll={(wear) => wardrobe.setAllOwned(wear)}
+      />
       <ToastStack toasts={toasts} onDismiss={dismiss} />
     </div>
   );
