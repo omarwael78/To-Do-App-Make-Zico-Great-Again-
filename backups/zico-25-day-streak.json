@@ -1,0 +1,688 @@
+{
+  "app": "taskflow",
+  "version": 2,
+  "exportedAt": "2026-08-11T14:25:19.020Z",
+  "tasks": [
+    {
+      "id": "436b7488-1cfc-4934-8008-2b2c0475cb34",
+      "text": "Plan the day",
+      "completed": true,
+      "createdAt": 1786436719020
+    },
+    {
+      "id": "f0325af7-9de8-4869-9249-5701ab967f81",
+      "text": "Check emails & messages",
+      "completed": true,
+      "createdAt": 1786440319020
+    },
+    {
+      "id": "78a0901f-a8f0-443b-b611-7dfe0c43e6b0",
+      "text": "Deep work block (90 min)",
+      "completed": true,
+      "createdAt": 1786443919020
+    },
+    {
+      "id": "795a8cd9-c2d4-40d2-acf7-17558c296f98",
+      "text": "Exercise / walk",
+      "completed": false,
+      "createdAt": 1786447519020
+    },
+    {
+      "id": "2f7eda85-fe8b-4373-833b-8e83fda57ec3",
+      "text": "Read for 20 minutes",
+      "completed": false,
+      "createdAt": 1786451119020
+    },
+    {
+      "id": "5569ae0b-d44c-4702-a063-57cd5966536e",
+      "text": "Tidy up workspace",
+      "completed": false,
+      "createdAt": 1786454719020
+    }
+  ],
+  "history": [
+    {
+      "date": "2026-07-18",
+      "tasks": [
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        },
+        {
+          "text": "Drink a glass of water",
+          "completed": true
+        },
+        {
+          "text": "Plan the day",
+          "completed": true
+        },
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-07-19",
+      "tasks": [
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        },
+        {
+          "text": "Drink a glass of water",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-07-20",
+      "tasks": [
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        },
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-07-21",
+      "tasks": [
+        {
+          "text": "Plan the day",
+          "completed": true
+        },
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        },
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-07-22",
+      "tasks": [
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        },
+        {
+          "text": "Drink a glass of water",
+          "completed": true
+        },
+        {
+          "text": "Plan the day",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-07-23",
+      "tasks": [
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-07-24",
+      "tasks": [
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        },
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        },
+        {
+          "text": "Drink a glass of water",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-07-25",
+      "tasks": [
+        {
+          "text": "Plan the day",
+          "completed": true
+        },
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        },
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-07-26",
+      "tasks": [
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        },
+        {
+          "text": "Drink a glass of water",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-07-27",
+      "tasks": [
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        },
+        {
+          "text": "Drink a glass of water",
+          "completed": true
+        },
+        {
+          "text": "Plan the day",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-07-28",
+      "tasks": [
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        },
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-07-29",
+      "tasks": [
+        {
+          "text": "Plan the day",
+          "completed": true
+        },
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        },
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-07-30",
+      "tasks": [
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        },
+        {
+          "text": "Drink a glass of water",
+          "completed": true
+        },
+        {
+          "text": "Plan the day",
+          "completed": true
+        },
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-07-31",
+      "tasks": [
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        },
+        {
+          "text": "Drink a glass of water",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-08-01",
+      "tasks": [
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        },
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-08-02",
+      "tasks": [
+        {
+          "text": "Plan the day",
+          "completed": true
+        },
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        },
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-08-03",
+      "tasks": [
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        },
+        {
+          "text": "Drink a glass of water",
+          "completed": true
+        },
+        {
+          "text": "Plan the day",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-08-04",
+      "tasks": [
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-08-05",
+      "tasks": [
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        },
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        },
+        {
+          "text": "Drink a glass of water",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-08-06",
+      "tasks": [
+        {
+          "text": "Plan the day",
+          "completed": true
+        },
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        },
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-08-07",
+      "tasks": [
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        },
+        {
+          "text": "Drink a glass of water",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-08-08",
+      "tasks": [
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        },
+        {
+          "text": "Drink a glass of water",
+          "completed": true
+        },
+        {
+          "text": "Plan the day",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-08-09",
+      "tasks": [
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        },
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-08-10",
+      "tasks": [
+        {
+          "text": "Plan the day",
+          "completed": true
+        },
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        },
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        }
+      ]
+    }
+  ],
+  "suggestions": [
+    {
+      "text": "Plan the day",
+      "useCount": 25,
+      "completedCount": 25,
+      "lastUsed": "2026-08-10",
+      "pinned": true,
+      "carriedOver": false
+    },
+    {
+      "text": "Exercise / walk",
+      "useCount": 25,
+      "completedCount": 24,
+      "lastUsed": "2026-08-09",
+      "pinned": false,
+      "carriedOver": false
+    },
+    {
+      "text": "Deep work block (90 min)",
+      "useCount": 24,
+      "completedCount": 23,
+      "lastUsed": "2026-08-08",
+      "pinned": false,
+      "carriedOver": false
+    },
+    {
+      "text": "Read for 20 minutes",
+      "useCount": 22,
+      "completedCount": 21,
+      "lastUsed": "2026-08-07",
+      "pinned": false,
+      "carriedOver": false
+    },
+    {
+      "text": "Meditate for 10 minutes",
+      "useCount": 19,
+      "completedCount": 18,
+      "lastUsed": "2026-08-06",
+      "pinned": false,
+      "carriedOver": false
+    }
+  ],
+  "lastDate": "2026-08-11"
+}

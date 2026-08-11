@@ -1,0 +1,184 @@
+{
+  "app": "taskflow",
+  "version": 2,
+  "exportedAt": "2026-08-11T14:25:19.016Z",
+  "tasks": [
+    {
+      "id": "d57c2e6f-99e0-40ed-a1c3-0587f23412bb",
+      "text": "Plan the day",
+      "completed": true,
+      "createdAt": 1786436719016
+    },
+    {
+      "id": "4267e8ec-4f06-4672-8f85-d76c69d10fa9",
+      "text": "Check emails & messages",
+      "completed": true,
+      "createdAt": 1786440319016
+    },
+    {
+      "id": "5f4985e2-6d82-4604-adeb-4168f4069eb1",
+      "text": "Deep work block (90 min)",
+      "completed": true,
+      "createdAt": 1786443919016
+    },
+    {
+      "id": "dfae2f17-cb71-43b5-b60d-eaba19344dff",
+      "text": "Exercise / walk",
+      "completed": false,
+      "createdAt": 1786447519016
+    },
+    {
+      "id": "99707243-2eac-461e-95bd-f46eb845453e",
+      "text": "Read for 20 minutes",
+      "completed": false,
+      "createdAt": 1786451119016
+    },
+    {
+      "id": "3a1b9dbc-fa42-4206-8872-5cf9138b96ab",
+      "text": "Tidy up workspace",
+      "completed": false,
+      "createdAt": 1786454719016
+    }
+  ],
+  "history": [
+    {
+      "date": "2026-08-07",
+      "tasks": [
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        },
+        {
+          "text": "Drink a glass of water",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-08-08",
+      "tasks": [
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        },
+        {
+          "text": "Drink a glass of water",
+          "completed": true
+        },
+        {
+          "text": "Plan the day",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-08-09",
+      "tasks": [
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        },
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        },
+        {
+          "text": "Read for 20 minutes",
+          "completed": true
+        },
+        {
+          "text": "Tidy up workspace",
+          "completed": true
+        }
+      ]
+    },
+    {
+      "date": "2026-08-10",
+      "tasks": [
+        {
+          "text": "Plan the day",
+          "completed": true
+        },
+        {
+          "text": "Check emails & messages",
+          "completed": true
+        },
+        {
+          "text": "Deep work block (90 min)",
+          "completed": true
+        },
+        {
+          "text": "Exercise / walk",
+          "completed": true
+        }
+      ]
+    }
+  ],
+  "suggestions": [
+    {
+      "text": "Plan the day",
+      "useCount": 5,
+      "completedCount": 5,
+      "lastUsed": "2026-08-10",
+      "pinned": true,
+      "carriedOver": false
+    },
+    {
+      "text": "Exercise / walk",
+      "useCount": 5,
+      "completedCount": 4,
+      "lastUsed": "2026-08-09",
+      "pinned": false,
+      "carriedOver": false
+    },
+    {
+      "text": "Deep work block (90 min)",
+      "useCount": 4,
+      "completedCount": 3,
+      "lastUsed": "2026-08-08",
+      "pinned": false,
+      "carriedOver": false
+    },
+    {
+      "text": "Read for 20 minutes",
+      "useCount": 2,
+      "completedCount": 1,
+      "lastUsed": "2026-08-07",
+      "pinned": false,
+      "carriedOver": false
+    },
+    {
+      "text": "Meditate for 10 minutes",
+      "useCount": 1,
+      "completedCount": 1,
+      "lastUsed": "2026-08-06",
+      "pinned": false,
+      "carriedOver": false
+    }
+  ],
+  "lastDate": "2026-08-11"
+}

@@ -32,6 +32,8 @@ no accounts, no backend, no tracking — your data lives in your own browser.
 ### Insights
 - Animated **progress ring** + progress bar for today
 - 🔥 **Streak counter** for consecutive productive days
+- 🏆 **Best-streak record** — the longest productive run is tracked for good
+  (History stats, banner chip), and beating it triggers a celebration toast
 - **History view** with per-day completion rings, ✅ done / ❌ missed breakdown
 - 14-day **completion trend chart** and lifetime stats (days tracked, tasks done, avg rate)
 
@@ -61,6 +63,11 @@ no accounts, no backend, no tracking — your data lives in your own browser.
 - **Sound effects** 🔔 — synthesized WebAudio (no files): task-complete pop, coin
   ding, level-up fanfare, perfect-day arpeggio, shop chimes and a friendly buzz
   when something is locked. Mute anytime with the 🔊/🔇 header toggle (remembered).
+- **New-record badge** — a 🏆 chip in the banner shows your all-time best streak,
+  and turns amber with a "new best!" flair the day you break it
+- **Mini Zico in the empty state** — when the list is empty, Zico himself
+  (wearing your gear) floats there, matching the filter: neutral for "all",
+  happy for "all caught up", sad for "nothing completed yet"
 
 ### Zico's gadget wardrobe 🎁
 Zico's **wardrobe** has two kinds of gear — streak items unlocked by staying
@@ -105,16 +112,23 @@ then it shows "Opened" until tomorrow.
 | 40 | Sea trident | 🔱 | Epic |
 | 45 | Fox pet | 🦊 | Epic |
 | 45 | Lightning aura | ⚡ | Legendary |
+| 25 | Bubble aura | 🫧 | Rare |
+| 30 | Flower petals | 🌸 | Rare |
+| 35 | Music notes | 🎵 | Epic |
+| 40 | Ice shards | ❄️ | Epic |
+| 50 | Fire flames | 🔥 | Legendary |
 | 60 | Mini dragon | 🐲 | Legendary |
 
 Shop items are grouped by **category** (accessories / weapons / pets / effects)
 with **rarity** badges, and the modal doubles as a **dressing room** — a live
 preview of Zico updates with every change. A **"Wear all"** shortcut equips (or
-strips) everything you own in one tap.
+strips) everything you own in one tap. The five **effects** (bubbles, petals,
+notes, ice, fire) animate live around Zico — even in the banner and dressing room.
 
 #### 🪙 Bonus coins
 - **Perfect day** — completing all tasks pays a **+5** bonus (with the confetti rain)
 - **End day** — capping a 100% day gives **+5**, a 50%+ day **+2**
+- **Milestones** — saving up 50 / 100 / 200 / 500 coins earns a fanfare toast
 
 Purchased items are equipped immediately, and pets sit beside Zico, weapons are
 held at his side, and hats cover the crown. A `+N 🪙` popup floats up over the
@@ -126,6 +140,8 @@ track every time you complete tasks.
 - **Dark / light theme** toggle — animated sun ↔ moon with twinkling stars; remembers your choice
   and follows your system preference by default
 - Toast notifications for every action
+- **Accessible wardrobe modal** — opening it locks page scroll, focuses the
+  dialog, traps Tab inside it, and restores focus + scroll on close (Esc works too)
 - Live tab title showing pending count: `(3) Make Zico Great Again`
 - Full **`prefers-reduced-motion`** support, semantic HTML, ARIA roles, and visible focus rings
 - Custom favicon, adaptive browser theme color, and social (OG/Twitter) meta tags
@@ -202,7 +218,7 @@ After editing, hit **"Reset to project defaults"** in the footer to reload from 
 |---|---|
 | `/` | Focus the task input (from anywhere) |
 | `Enter` | Save the new task / confirm an edit |
-| `Esc` | Cancel editing or blur the input |
+| `Esc` | Cancel editing, blur the input, or close the wardrobe modal |
 
 ---
 
@@ -219,7 +235,8 @@ src/
 │   ├── useTheme.ts           # dark/light mode
 │   ├── useToasts.ts          # toast notifications
 │   ├── useTaskData.ts        # tasks, history, suggestions, streak, daily rollover, backup
-│   └── useWardrobe.ts        # coins, owned & equipped items, shop purchases
+│   ├── useWardrobe.ts        # coins, owned & equipped items, shop purchases
+│   └── useSounds.ts          # WebAudio sound effects + mute preference
 ├── utils/
 │   ├── cn.ts                 # Tailwind class merging
 │   └── date.ts               # date helpers (formatting, rollover, greeting)
