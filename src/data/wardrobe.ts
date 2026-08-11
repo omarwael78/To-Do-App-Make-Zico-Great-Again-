@@ -253,16 +253,6 @@ export const SHOP_GADGETS: Gadget[] = [
     description: 'Crackling energy — legendary.',
   },
   {
-    id: 'aura',
-    name: 'Lightning aura',
-    icon: '⚡',
-    kind: 'coin',
-    price: 45,
-    category: 'effect',
-    rarity: 'legendary',
-    description: 'Crackling energy — legendary.',
-  },
-  {
     id: 'bubbles',
     name: 'Bubble aura',
     icon: '🫧',
