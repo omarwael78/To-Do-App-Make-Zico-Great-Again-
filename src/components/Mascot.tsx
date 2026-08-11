@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { cn } from '@/utils/cn';
+import { getMascot } from '@/data/mascots';
 import type { Mood, Reaction } from '@/types/task';
 
 interface MascotProps {
@@ -14,6 +15,8 @@ interface MascotProps {
   reaction?: Reaction;
   /** Wardrobe item ids currently worn (already filtered to owned items). */
   equipped?: string[];
+  /** Mascot skin id (see `src/data/mascots.ts`). */
+  skin?: string;
   size?: number;
   className?: string;
 }
@@ -41,9 +44,13 @@ export default function Mascot({
   walking = false,
   reaction = { id: 0, type: 'none' },
   equipped = [],
+  skin = 'zico',
   size = 72,
   className,
 }: MascotProps) {
+  const skinDef = getMascot(skin);
+  const p = skinDef.palette;
+  const bodyGradient = `url(#mascot-body-${skinDef.id})`;
   const [waving, setWaving] = useState(false);
 
   useEffect(() => {
@@ -125,7 +132,7 @@ export default function Mascot({
       className={cn('relative shrink-0', className)}
       style={{ width: size, height: size }}
       role="img"
-      aria-label={`Zico feeling ${mood.replace('-', ' ')}`}
+      aria-label={`${skinDef.name} feeling ${mood.replace('-', ' ')}`}
     >
       <svg
         key={reaction.id}
@@ -135,9 +142,9 @@ export default function Mascot({
         className={anim}
       >
         <defs>
-          <linearGradient id="mascot-body" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#a78bfa" />
-            <stop offset="100%" stopColor="#6366f1" />
+          <linearGradient id={`mascot-body-${skinDef.id}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={p.from} />
+            <stop offset="100%" stopColor={p.to} />
           </linearGradient>
           <linearGradient id="mascot-cape" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#ef4444" />
@@ -219,7 +226,7 @@ export default function Mascot({
         {/* Waving arm (waves on load) */}
         {waving && (
           <g key={`arm-${reaction.id}`} className="animate-arm-wave" aria-hidden="true">
-            <ellipse cx="6" cy="60" rx="6" ry="13" fill="#4f46e5" />
+            <ellipse cx="6" cy="60" rx="6" ry="13" fill={bodyGradient} stroke={p.outline} strokeWidth="1.6" />
           </g>
         )}
 
@@ -262,16 +269,64 @@ export default function Mascot({
           </g>
         )}
 
+        {/* Native skin accessories (behind the body) */}
+        {skinDef.accessory === 'cat-ears' && (
+          <g aria-hidden="true">
+            <path d="M32 13 L23 -2 L40 7 Z" fill={bodyGradient} stroke={p.outline} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M68 13 L77 -2 L60 7 Z" fill={bodyGradient} stroke={p.outline} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M31 11 L26 2 L36 7 Z" fill={p.blush} opacity="0.9" />
+            <path d="M69 11 L74 2 L64 7 Z" fill={p.blush} opacity="0.9" />
+          </g>
+        )}
+        {skinDef.accessory === 'horns' && (
+          <g aria-hidden="true">
+            <path d="M34 10 Q27 0 22 -4 Q29 -3 37 4 Q36 8 34 10 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.4" strokeLinejoin="round" />
+            <path d="M66 10 Q73 0 78 -4 Q71 -3 63 4 Q64 8 66 10 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.4" strokeLinejoin="round" />
+          </g>
+        )}
+        {skinDef.accessory === 'dino' && (
+          <g aria-hidden="true">
+            <path d="M37 9 L42 -3 L47 8 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M46 6 L50 -4 L54 6 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M55 7 L60 -3 L64 8 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+          </g>
+        )}
+        {skinDef.accessory === 'antenna' && (
+          <g aria-hidden="true">
+            <line x1="50" y1="13" x2="50" y2="3" stroke={p.outline} strokeWidth="2.4" strokeLinecap="round" />
+            <circle cx="50" cy="3" r="3.2" fill={p.blush} stroke={p.outline} strokeWidth="1.4" />
+          </g>
+        )}
+
+        {/* Nub arms (behind the body edge) */}
+        <ellipse cx="16" cy="68" rx="5.5" ry="8.5" fill={bodyGradient} stroke={p.outline} strokeWidth="1.6" transform="rotate(24 16 68)" />
+        <ellipse cx="84" cy="68" rx="5.5" ry="8.5" fill={bodyGradient} stroke={p.outline} strokeWidth="1.6" transform="rotate(-24 84 68)" />
+
         {/* Body */}
         <path
           d="M50 5 C66 4 82 8 90 22 C97 35 95 52 89 64 C83 77 73 88 60 92 C47 96 34 94 24 86 C13 78 7 64 6 49 C5 34 12 20 23 12 C32 6 42 5 50 5 Z"
-          fill="url(#mascot-body)"
+          fill={bodyGradient}
+          stroke={p.outline}
+          strokeWidth="2.2"
+          strokeLinejoin="round"
         />
-        <ellipse cx="50" cy="63" rx="25" ry="19" fill="#ffffff" opacity="0.22" aria-hidden="true" />
+        {/* Glossy highlight (top-left light) */}
+        <ellipse
+          cx="36"
+          cy="29"
+          rx="13"
+          ry="7.5"
+          fill="#ffffff"
+          opacity="0.28"
+          transform="rotate(-18 36 29)"
+          aria-hidden="true"
+        />
+        {/* Soft belly */}
+        <ellipse cx="50" cy="64" rx="23" ry="17" fill={p.belly} opacity="0.22" aria-hidden="true" />
 
         {/* Feet */}
-        <ellipse cx="33" cy="93" rx="10" ry="5" fill="#4338ca" opacity="0.85" />
-        <ellipse cx="67" cy="93" rx="10" ry="5" fill="#4338ca" opacity="0.85" />
+        <ellipse cx="33" cy="93" rx="10" ry="5" fill={p.feet} opacity="0.9" />
+        <ellipse cx="67" cy="93" rx="10" ry="5" fill={p.feet} opacity="0.9" />
 
         {/* Gold chain (streak 10+) */}
         {hasChain && (
@@ -391,8 +446,8 @@ export default function Mascot({
         {/* Blush (happy face) */}
         {showHappy && (
           <g aria-hidden="true">
-            <ellipse cx="25" cy="54" rx="5" ry="3" fill="#f9a8d4" opacity="0.7" />
-            <ellipse cx="75" cy="54" rx="5" ry="3" fill="#f9a8d4" opacity="0.7" />
+            <ellipse cx="25" cy="54" rx="5" ry="3" fill={p.blush} opacity="0.7" />
+            <ellipse cx="75" cy="54" rx="5" ry="3" fill={p.blush} opacity="0.7" />
           </g>
         )}
 
