@@ -376,7 +376,7 @@ export const MASCOTS: MascotDef[] = [
       blush: '#fda4af',
     },
     accessory: 'hair-fluff',
-    shape: 'human',
+    shape: 'blob',
     unlock: { type: 'streak', goal: 15 },
   },
   {
@@ -393,7 +393,7 @@ export const MASCOTS: MascotDef[] = [
       blush: '#a3e635',
     },
     accessory: 'mane',
-    shape: 'human',
+    shape: 'blob',
     unlock: { type: 'coins', goal: 100 },
   },
 ];
