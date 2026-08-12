@@ -291,6 +291,9 @@ export default function App() {
         setCoinFx({ id: Date.now(), amount: 1 });
         sounds.playComplete();
         sounds.playCoin();
+      } else if (task && task.completed) {
+        wardrobe.addCoins(-1);
+        setCoinFx({ id: Date.now(), amount: -1 });
       }
       toggleTask(id);
     },
