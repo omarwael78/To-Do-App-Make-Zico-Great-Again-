@@ -60,7 +60,6 @@ export function useWardrobe(streak: number) {
 
   const addCoins = useCallback(
     (amount: number) => {
-      if (amount <= 0) return;
       setCoins((prev) => prev + amount);
     },
     [setCoins]
