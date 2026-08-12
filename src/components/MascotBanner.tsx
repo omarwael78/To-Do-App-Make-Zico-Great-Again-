@@ -220,7 +220,7 @@ export default function MascotBanner({
               className="animate-coin-pop pointer-events-none absolute left-1/2 top-0 z-10 -translate-x-1/2 text-sm font-extrabold text-amber-500 dark:text-amber-400"
               aria-hidden="true"
             >
-              +{coinFx.amount} 🪙
+              {coinFx.amount > 0 ? '+' : ''}{coinFx.amount} 🪙
             </span>
           )}
 
