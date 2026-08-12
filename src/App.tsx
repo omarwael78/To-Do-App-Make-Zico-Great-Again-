@@ -378,10 +378,13 @@ export default function App() {
       deleteTask(task.id);
       notify('Task deleted', 'info', {
         label: 'Undo',
-        onClick: () => restoreTask(task),
+        onClick: () => {
+          restoreTask(task);
+          wardrobe.addCoins(-1);
+        },
       });
     },
-    [deleteTask, restoreTask, notify]
+    [deleteTask, restoreTask, wardrobe.addCoins, notify]
   );
 
   const handleClearCompleted = useCallback(() => {
