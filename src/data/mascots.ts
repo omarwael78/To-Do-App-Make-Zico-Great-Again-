@@ -25,7 +25,14 @@ export type MascotUnlock =
  * Zico's gear — hats, crown, cape, pets — fits every friend, and every
  * expression, reaction and animation works on every shape.
  */
-export type MascotShape = 'blob' | 'tall' | 'gumdrop' | 'block' | 'heart' | 'egg';
+export type MascotShape =
+  | 'blob'
+  | 'tall'
+  | 'gumdrop'
+  | 'block'
+  | 'heart'
+  | 'egg'
+  | 'human';
 
 export type MascotAccessory =
   | 'none'
@@ -41,7 +48,10 @@ export type MascotAccessory =
   | 'atef'
   | 'plume'
   | 'star'
-  | 'spikes';
+  | 'spikes'
+  | 'hair-fluff'
+  | 'hair-swept'
+  | 'hair-royal';
 
 export interface MascotDef {
   id: string;
@@ -300,6 +310,57 @@ export const MASCOTS: MascotDef[] = [
     accessory: 'spikes',
     shape: 'egg',
     unlock: { type: 'streak', goal: 30 },
+  },
+  {
+    id: 'faramawey',
+    name: 'Faramawey',
+    emoji: '🧔',
+    tagline: 'The wise elder — calm, kind, gloriously hirsute.',
+    palette: {
+      from: '#d9a066',
+      to: '#8b5e3c',
+      outline: '#4a2f1a',
+      feet: '#6b4423',
+      belly: '#fdf6ec',
+      blush: '#d9a066',
+    },
+    accessory: 'hair-fluff',
+    shape: 'human',
+    unlock: { type: 'tasks', goal: 150 },
+  },
+  {
+    id: 'omar-ezzat',
+    name: 'Omar Ezzat',
+    emoji: '👔',
+    tagline: 'The sharp professional — every day a clean win.',
+    palette: {
+      from: '#60a5fa',
+      to: '#1e40af',
+      outline: '#172554',
+      feet: '#1e3a8a',
+      belly: '#eff6ff',
+      blush: '#93c5fd',
+    },
+    accessory: 'hair-swept',
+    shape: 'human',
+    unlock: { type: 'streak', goal: 20 },
+  },
+  {
+    id: 'omar-wael',
+    name: 'Omar Wael',
+    emoji: '👑',
+    tagline: 'The creator himself. Finish 1000 tasks to earn his crown.',
+    palette: {
+      from: '#fbbf24',
+      to: '#7c3aed',
+      outline: '#4c1d95',
+      feet: '#6d28d9',
+      belly: '#fef3c7',
+      blush: '#fbbf24',
+    },
+    accessory: 'hair-royal',
+    shape: 'human',
+    unlock: { type: 'tasks', goal: 1000 },
   },
 ];
 

@@ -75,7 +75,8 @@ no accounts, no backend, no tracking — your data lives in your own browser.
 ### 🎭 Zico's Friends
 Zico isn't alone! The **Zico's Friends tab** of the wardrobe lets you play as
 his whole crew — each friend has its own palette, headdress and **body
-silhouette** (round blob, tall jackal, gumdrop, stone block, heart, egg), yet
+silhouette** (round blob, tall jackal, gumdrop, stone block, heart, egg —
+and even **human**!), yet
 every piece of gear, expression, reaction, animation and effect works on all
 of them. Each friend has a **challenge** to earn, and a toast celebrates the
 moment one becomes available. Once you pick a friend, the whole app — header
@@ -98,6 +99,9 @@ choice, and the page headline becomes **"Make *their name* Great Again"**:
 | **Fifi** 🎯 | Cyan huntress — **gumdrop** body, double plume | Complete **40 tasks in one day** |
 | **Zizo** ⭐ | Magenta star with sparkle headdress | Track **30 days** in the app |
 | **Joe** 🕶️ | Indigo punk — **egg** body, spiky hair | Reach a **30-day** best streak |
+| **Faramawey** 🧔 | Warm-brown elder — **human** body, fluffy grey hair | Complete **150 tasks** |
+| **Omar Ezzat** 👔 | Blue professional — **human** body, swept dark hair | Reach a **20-day** best streak |
+| **Omar Wael** 👑 | Royal gold-violet — **human** body, sleek hair + gold diadem | Complete **1000 tasks** — the final boss |
 
 Locked friends show their challenge progress bar in the modal; unlocked ones
 can be selected anytime, and the whole app (header, banner, track, empty

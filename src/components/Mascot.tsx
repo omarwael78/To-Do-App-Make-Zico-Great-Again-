@@ -62,6 +62,7 @@ export default function Mascot({
     block: 'M50 7 C56 7 62 8 68 10 C80 14 90 22 92 36 C94 50 93 66 88 80 C83 91 69 95 50 95 C31 95 17 91 12 80 C7 66 6 50 8 36 C10 22 20 14 32 10 C38 8 44 7 50 7 Z',
     heart: 'M50 16 C48 8 38 2 28 6 C16 10 10 24 14 38 C18 52 34 70 50 95 C66 70 82 52 86 38 C90 24 84 10 72 6 C62 2 52 8 50 16 Z',
     egg: 'M50 4 C60 4 68 8 73 16 C82 30 92 40 92 52 C92 68 84 80 72 87 C64 91 57 92 50 92 C43 92 36 91 28 87 C16 80 8 68 8 52 C8 40 18 30 27 16 C32 8 40 4 50 4 Z',
+    human: 'M50 4 C66 4 78 16 78 32 C78 44 70 54 58 60 C70 63 82 69 87 78 C92 87 85 93 73 95 C63 97 57 97 50 97 C43 97 37 97 27 95 C15 93 8 87 13 78 C18 69 30 63 42 60 C30 54 22 44 22 32 C22 16 34 4 50 4 Z',
   };
   const [waving, setWaving] = useState(false);
 
@@ -349,6 +350,44 @@ export default function Mascot({
             <path d="M37 9 L40 -4 L46 6 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
             <path d="M45 5 L50 -6 L55 5 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
             <path d="M54 6 L60 -4 L63 9 Z" fill={p.feet} stroke={p.outline} strokeWidth="1.2" strokeLinejoin="round" />
+          </g>
+        )}
+        {skinDef.accessory === 'hair-fluff' && (
+          <g aria-hidden="true">
+            <path
+              d="M31 10 Q30 4 34 2 Q36 0 38 3 Q39 5 39 8 Q41 2 44 1 Q46 0 48 3 Q49 5 49 8 Q51 1 54 2 Q56 3 57 7 Q60 4 63 5 Q66 6 66 10 Z"
+              fill="#e2e8f0"
+              stroke="#94a3b8"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
+            />
+            <path d="M36 6 Q38 3 40 6" fill="none" stroke="#cbd5e1" strokeWidth="1" strokeLinecap="round" />
+            <path d="M50 5 Q52 2 54 5" fill="none" stroke="#cbd5e1" strokeWidth="1" strokeLinecap="round" />
+          </g>
+        )}
+        {skinDef.accessory === 'hair-swept' && (
+          <g aria-hidden="true">
+            <path
+              d="M30 20 C28 9 38 3 52 3 C64 3 72 9 70 16 C69 11 63 7 53 7 C42 7 34 12 33 18 Z"
+              fill="#1e293b"
+              stroke="#0f172a"
+              strokeWidth="1.1"
+              strokeLinejoin="round"
+            />
+            <path d="M33 17 L27 21 L34 20 Z" fill="#1e293b" stroke="#0f172a" strokeWidth="1" strokeLinejoin="round" />
+          </g>
+        )}
+        {skinDef.accessory === 'hair-royal' && (
+          <g aria-hidden="true">
+            <path
+              d="M30 22 C28 8 38 2 50 2 C62 2 72 8 70 22 C69 13 62 7 52 6 C44 6 37 12 35 19 Z"
+              fill="#0f172a"
+              stroke="#334155"
+              strokeWidth="1"
+              strokeLinejoin="round"
+            />
+            <path d="M33 20 Q50 15 67 20" fill="none" stroke="#fbbf24" strokeWidth="2.4" strokeLinecap="round" />
+            <circle cx="50" cy="16.8" r="1.6" fill="#fbbf24" stroke="#b45309" strokeWidth="0.6" />
           </g>
         )}
 
