@@ -362,6 +362,40 @@ export const MASCOTS: MascotDef[] = [
     shape: 'human',
     unlock: { type: 'tasks', goal: 1000 },
   },
+  {
+    id: '7oda',
+    name: '7oda',
+    emoji: '🧿',
+    tagline: 'Lucky charm — watches over your days.',
+    palette: {
+      from: '#f472b6',
+      to: '#ec4899',
+      outline: '#7f1d1a',
+      feet: '#991b1b',
+      belly: '#fecaca',
+      blush: '#fda4af',
+    },
+    accessory: 'hair-fluff',
+    shape: 'human',
+    unlock: { type: 'streak', goal: 15 },
+  },
+  {
+    id: 'mora',
+    name: 'mora',
+    emoji: '🌿',
+    tagline: 'Nature spirit — grows with every streak.',
+    palette: {
+      from: '#22c55e',
+      to: '#16a34a',
+      outline: '#052e16',
+      feet: '#047857',
+      belly: '#d1fae5',
+      blush: '#a3e635',
+    },
+    accessory: 'mane',
+    shape: 'human',
+    unlock: { type: 'coins', goal: 100 },
+  },
 ];
 
 export const getMascot = (id: string): MascotDef =>
